@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <declare-styleable name="MessageInputView">
+        <attr name="inputHint" format="string"/>
+    </declare-styleable>
     <declare-styleable name="MessageItemView">
         <attr name="messageId" format="string" />
         <attr name="exampleDimension" format="dimension" />

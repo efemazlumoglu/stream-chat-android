@@ -10,17 +10,13 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 
@@ -56,8 +52,8 @@ import com.getstream.sdk.chat.utils.Global;
 import com.getstream.sdk.chat.utils.PermissionChecker;
 import com.getstream.sdk.chat.utils.StringUtility;
 import com.getstream.sdk.chat.utils.Utils;
-import com.getstream.sdk.chat.utils.GridSpacingItemDecoration;
 import com.getstream.sdk.chat.model.SelectAttachmentModel;
+import com.getstream.sdk.chat.view.MessageInputView;
 import com.getstream.sdk.chat.viewmodel.ChatActivityViewModel;
 import com.getstream.sdk.chat.viewmodel.ChatActivityViewModelFactory;
 import com.google.gson.Gson;
@@ -130,8 +126,6 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
 
         if (Global.eventFunction == null) Global.eventFunction = new EventFunction();
         Global.eventFunction.setChannel(this.channel);
-        startTypingStopRepeatingTask();
-        startTypingClearRepeatingTask();
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(Constant.BC_RECONNECT_CHANNEL);
@@ -145,8 +139,6 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
         Global.streamChat.setChannel(null);
         Global.webSocketService.removeWSResponseHandler(this);
         Global.eventFunction.setChannel(null);
-        stopTypingStopRepeatingTask();
-        stopTypingClearRepeatingTask();
 
         try {
             unregisterReceiver(receiver);
@@ -182,22 +174,24 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
     @Override
     public void onBackPressed() {
         // Close if File Attach View is opened.
-        if (binding.clAddFile.getVisibility() == View.VISIBLE) {
-            sendFileFunction.onClickAttachmentViewClose(null);
-            return;
-        }
+//       TODO: implement me
+//        if (binding.clAddFile.getVisibility() == View.VISIBLE) {
+//            sendFileFunction.onClickAttachmentViewClose(null);
+//            return;
+//        }
         // Close if Selecting Photo View is opened.
-        if (binding.clSelectPhoto.getVisibility() == View.VISIBLE) {
-            sendFileFunction.onClickSelectMediaViewClose(null);
-            return;
-        }
+//       // TODO
+//        if (binding.clSelectPhoto.getVisibility() == View.VISIBLE) {
+//            sendFileFunction.onClickSelectMediaViewClose(null);
+//            return;
+//        }
         // Close if Thread View is opened.
         if (isThreadMode()) {
             onClickCloseThread(null);
             return;
         }
         // Cancel if editing message.
-        if (binding.etMessage.getTag() != null) {
+        if (binding.messageInput.IsEditing()) {
             cancelEditMessage();
             return;
         }
@@ -330,7 +324,6 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
 //            binding.tvNewMessage.setVisibility(View.GONE);
 //        });
         // File Attachment
-        configAttachmentUIs();
     }
 
     private void configActionBar() {
@@ -406,36 +399,17 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
     }
 
     private void configMessageInputView() {
-        binding.setActiveMessageComposer(false);
-        binding.setActiveMessageSend(false);
+
         binding.setShowLoadMoreProgressbar(false);
         binding.setNoConnection(Global.noConnection);
-        binding.etMessage.setOnFocusChangeListener((View view, boolean hasFocus) -> {
-            binding.setActiveMessageComposer(hasFocus);
+        binding.messageInput.setOnFocusChangeListener((View view, boolean hasFocus) -> {
             lockRVScrollListener = hasFocus;
         });
-        binding.etMessage.addTextChangedListener(new TextWatcher() {
-            public void afterTextChanged(Editable s) {
-                String text = binding.etMessage.getText().toString();
-                binding.setActiveMessageSend(!(text.length() == 0));
-                sendFileFunction.checkCommand(text);
-                if (text.length() > 0) {
-                    keystroke();
-                }
-            }
 
-            public void beforeTextChanged(CharSequence s, int start,
-                                          int count, int after) {
-            }
-
-            public void onTextChanged(CharSequence s, int start,
-                                      int before, int count) {
-            }
-        });
         KeyboardVisibilityEvent.setEventListener(
                 this, (boolean isOpen) -> {
                     if (!isOpen) {
-                        binding.etMessage.clearFocus();
+                        binding.messageInput.clearFocus();
                     } else {
                         lockRVScrollListener = true;
                         new Handler().postDelayed(() -> {
@@ -446,7 +420,26 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
                         recyclerView().scrollToPosition(lVPosition);
 
                 });
-        binding.tvSend.setOnClickListener(this::sendMessage);
+
+        binding.messageInput.setOnSendMessageListener(new MessageInputView.SendMessageListener() {
+            @Override
+            public void onSendMessage(String input) {
+                // TODO send the message
+
+            }
+        });
+
+        binding.messageInput.setTypingListener(new MessageInputView.TypingListener() {
+            @Override
+            public void onStartTyping() {
+                // TODO: forward to the client
+            }
+
+            @Override
+            public void onStopTyping() {
+                // TODO:  forward to the client
+            }
+        });
     }
 
     private void configMessageRecyclerView() {
@@ -476,31 +469,7 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
         }
     }
 
-    private void configAttachmentUIs() {
-        binding.rvMedia.setLayoutManager(new GridLayoutManager(this, 4, LinearLayoutManager.VERTICAL, false));
-        binding.rvMedia.hasFixedSize();
-        binding.rvComposer.setLayoutManager(new GridLayoutManager(this, 1, LinearLayoutManager.HORIZONTAL, false));
-        int spanCount = 4;  // 4 columns
-        int spacing = 2;    // 1 px
-        boolean includeEdge = false;
-        binding.rvMedia.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
 
-        binding.tvOpenAttach.setOnClickListener(v -> sendFileFunction.onClickAttachmentViewOpen(v));
-        binding.ivBackAttachment.setOnClickListener(v -> sendFileFunction.onClickAttachmentViewClose(v));
-        binding.tvCloseAttach.setOnClickListener(v -> sendFileFunction.onClickAttachmentViewClose(v));
-        binding.llMedia.setOnClickListener(v -> sendFileFunction.onClickSelectMediaViewOpen(v, null));
-        binding.llCamera.setOnClickListener(v -> {
-            Utils.setButtonDelayEnable(v);
-            sendFileFunction.onClickAttachmentViewClose(v);
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-            Intent chooserIntent = Intent.createChooser(takePictureIntent, "Capture Image or Video");
-            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{takeVideoIntent});
-            startActivityForResult(chooserIntent, Constant.CAPTURE_IMAGE_REQUEST_CODE);
-        });
-        binding.llFile.setOnClickListener(v -> sendFileFunction.onClickSelectFileViewOpen(v, null));
-        binding.tvMediaClose.setOnClickListener(v -> sendFileFunction.onClickSelectMediaViewClose(v));
-    }
 
     private void setChannelMessageRecyclerViewAdapder() {
         mChannelMessageAdapter = new MessageListItemAdapter(this, this.channelResponse, channelMessages,
@@ -551,7 +520,7 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
 
                 if (currentFirstVisible < fVPosition) {
                     Utils.hideSoftKeyboard(ChatActivity.this);
-                    binding.etMessage.clearFocus();
+                    binding.messageInput.clearFocus();
                     if (currentFirstVisible == 0 && !isNoHistory()) loadMore();
 //                    if (currentLastVisible >= messages().size() - 1)
 //                        binding.tvNewMessage.setVisibility(View.GONE);
@@ -573,15 +542,17 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
     /**
      * Send Message - Send a message to this channel
      */
-    public void sendMessage(View view) {
+    public void sendMessage(String messageText) {
 //        if (Global.noConnection) {
 //            Utils.showMessage(this, Constant.NO_INTERNET);
 //            return;
 //        }
-        if (binding.etMessage.getTag() == null) {
-            sendNewMessage(binding.etMessage.getText().toString(), sendFileFunction.getSelectedAttachments(), null);
-        } else
-            updateMessage();
+        if (binding.messageInput.IsEditing()) {
+            updateMessage(binding.messageInput.getMessageText());
+        } else {
+            sendNewMessage(messageText, sendFileFunction.getSelectedAttachments(), null);
+        }
+
     }
 
     public void sendNewMessage(String text, List<Attachment> attachments, String resendMessageId) {
@@ -593,47 +564,47 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
             ephemeralMessage = createEphemeralMessage(false);
             handleAction(ephemeralMessage);
         }
-        binding.tvSend.setEnabled(false);
+        binding.messageInput.setEnabled(false);
         messageFunction.sendMessage(text,
                 attachments,
                 isThreadMode() ? thread_parentMessage.getId() : null,
                 new MessageSendListener() {
                     @Override
                     public void onSuccess(MessageResponse response) {
-                        binding.tvSend.setEnabled(true);
+                        binding.messageInput.setEnabled(true);
                         progressSendMessage(response.getMessage(), resendMessageId);
                     }
 
                     @Override
                     public void onFailed(String errMsg, int errCode) {
-                        binding.tvSend.setEnabled(true);
+                        binding.messageInput.setEnabled(true);
                         Utils.showMessage(ChatActivity.this, errMsg);
                     }
                 });
         initSendMessage();
     }
 
-    public void updateMessage() {
+    public void updateMessage(String messageText) {
         if (Global.noConnection) {
             Utils.showMessage(this, "No internet connection!");
             return;
         }
-        binding.tvSend.setEnabled(false);
-        messageFunction.updateMessage(binding.etMessage.getText().toString(),
-                (Message) binding.etMessage.getTag(),
+        binding.messageInput.setEnabled(false);
+        messageFunction.updateMessage(messageText,
+                (Message) binding.messageInput.GetEditMessage(),
                 sendFileFunction.getSelectedAttachments(),
                 new MessageSendListener() {
                     @Override
                     public void onSuccess(MessageResponse response) {
                         initSendMessage();
                         response.getMessage().setDelivered(true);
-                        binding.etMessage.setTag(null);
-                        binding.tvSend.setEnabled(true);
+                        binding.messageInput.CancelEditMessage();
+                        binding.messageInput.setEnabled(true);
                     }
 
                     @Override
                     public void onFailed(String errMsg, int errCode) {
-                        binding.tvSend.setEnabled(true);
+                        binding.messageInput.setEnabled(true);
                         Utils.showMessage(ChatActivity.this, errMsg);
                     }
                 });
@@ -689,7 +660,6 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
     }
 
     private void initSendMessage() {
-        binding.etMessage.setText("");
         sendFileFunction.initSendMessage();
     }
 
@@ -701,7 +671,7 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
     private Message createEphemeralMessage(boolean isOffle) {
         Message message = new Message();
         message.setId(Global.convertDateToString(new Date()));
-        message.setText(binding.etMessage.getText().toString());
+        message.setText(binding.messageInput.getMessageText());
         message.setType(isOffle ? ModelType.message_error : ModelType.message_ephemeral);
         message.setCreated_at(Global.convertDateToString(new Date()));
         Global.setStartDay(Arrays.asList(message), getLastMessage());
@@ -719,11 +689,12 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
 
     // Edit
     private void editMessage(Message message) {
-        binding.etMessage.setTag(message);
-        binding.etMessage.requestFocus();
+        binding.messageInput.EditMessage(message);
+        binding.messageInput.requestInputFocus();
         if (!TextUtils.isEmpty(message.getText())) {
-            binding.etMessage.setText(message.getText());
-            binding.etMessage.setSelection(binding.etMessage.getText().length());
+            // TODO: figure out what this does...
+//            binding.etMessage.setText(message.getText());
+//            binding.etMessage.setSelection(binding.etMessage.getText().length());
         }
         if (message.getAttachments() != null && !message.getAttachments().isEmpty()) {
             for (Attachment attachment : message.getAttachments())
@@ -745,9 +716,8 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
 
     private void cancelEditMessage() {
         initSendMessage();
-        binding.etMessage.clearFocus();
-        binding.etMessage.setTag(null);
-        sendFileFunction.fadeAnimationView(binding.ivBackAttachment, false);
+        binding.messageInput.CancelEditMessage();
+
     }
 
     // endregion
@@ -791,7 +761,7 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
                     break;
                 case Constant.TAG_MESSAGE_INVALID_COMMAND:
                     handleAction(message);
-                    binding.etMessage.setText("/");
+                    //binding.etMessage.setText("/");
                     break;
                 case Constant.TAG_MESSAGE_CHECK_DELIVERED:
                     showAlertReadUsers(message);
@@ -861,78 +831,9 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
     }
 
 
-    // endregion
-
-    // region Typing Indicator
-    boolean isTyping = false;
-    Date lastKeyStroke;
-    Date lastTypingEvent;
-    private Handler stopTyingEventHandler = new Handler();
-    Runnable runnableTypingStop = new Runnable() {
-        @Override
-        public void run() {
-            try {
-                clean();
-            } finally {
-                stopTyingEventHandler.postDelayed(runnableTypingStop, 3000);
-            }
-        }
-    };
-
-    void startTypingStopRepeatingTask() {
-        runnableTypingStop.run();
-    }
-
-    void stopTypingStopRepeatingTask() {
-        stopTyping();
-        stopTyingEventHandler.removeCallbacks(runnableTypingStop);
-    }
-
-    /**
-     * Clean - Cleans the channel state and fires stop typing if needed
-     */
-    public void clean() {
-        if (this.lastKeyStroke != null) {
-            Date now = new Date();
-            long diff = now.getTime() - this.lastKeyStroke.getTime();
-            if (diff > 1000 && this.isTyping) {
-                this.stopTyping();
-            }
-        }
-    }
-
-    /**
-     * keystroke - First of the typing.start and typing.stop events based on the users keystrokes.
-     * Call this on every keystroke
-     */
-    public void keystroke() {
-        Date now = new Date();
-        long diff;
-        if (this.lastKeyStroke == null)
-            diff = 2001;
-        else
-            diff = now.getTime() - this.lastKeyStroke.getTime();
 
 
-        this.lastKeyStroke = now;
-        this.isTyping = true;
-        // send a typing.start every 2 seconds
-        if (diff > 2000) {
-            this.lastTypingEvent = new Date();
-            Global.eventFunction.sendEvent(Event.typing_start);
-            Log.d(TAG, "typing.start");
-        }
-    }
 
-    /**
-     * stopTyping - Sets last typing to null and sends the typing.stop event
-     */
-    public void stopTyping() {
-        this.lastTypingEvent = null;
-        this.isTyping = false;
-        Global.eventFunction.sendEvent(Event.typing_stop);
-        Log.d(TAG, "typing.stop");
-    }
 
     // refresh Current Typing users in this channel
     private Handler clearTyingUserHandler = new Handler();
@@ -953,14 +854,6 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
         }
     };
 
-    private void startTypingClearRepeatingTask() {
-        runnableTypingClear.run();
-    }
-
-    private void stopTypingClearRepeatingTask() {
-        clearTyingUserHandler.removeCallbacks(runnableTypingClear);
-    }
-    // endregion
 
     // region Action
     private void handleAction(Message message) {
@@ -1063,8 +956,7 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
     }
 
     private void cleanEditView() {
-        binding.etMessage.setTag(null);
-        binding.etMessage.setText("");
+        binding.messageInput.CancelEditMessage();
         thread_parentMessage = null;
         threadMessages = null;
         lVPosition = 0;
