@@ -1,15 +1,19 @@
 package com.example.example;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 
 import com.getstream.sdk.chat.component.Component;
 import com.getstream.sdk.chat.model.Channel;
 import com.getstream.sdk.chat.rest.User;
 import com.getstream.sdk.chat.rest.core.StreamChat;
-import com.getstream.sdk.chat.view.activity.ChatActivity;
+import com.getstream.sdk.chat.view.fragment.ChannelFragment;
+import com.getstream.sdk.chat.view.fragment.ChannelListFragment;
 
 import java.util.HashMap;
 
-public class MainActivity extends ChatActivity {
+public class MainActivity extends AppCompatActivity {
 
     private final String API_KEY = "u4nadyhunvhz";
     private final String USER_NAME = "Mute dawn";
@@ -34,7 +38,15 @@ public class MainActivity extends ChatActivity {
         }
 
         Channel channel = new Channel("message", "general", null);
-        streamChat.setChannel(channel);
+        streamChat.channel = channel;
+
+        ChannelFragment fragment = new ChannelFragment();
+        //fragment.containerResId = R.id.container;
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.container, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
 
         super.onCreate(savedInstanceState);
     }
