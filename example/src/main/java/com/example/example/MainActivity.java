@@ -1,5 +1,6 @@
 package com.example.example;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.getstream.sdk.chat.component.Component;
 import com.getstream.sdk.chat.model.Channel;
@@ -14,9 +15,11 @@ public class MainActivity extends ChatActivity {
     private final String API_KEY = "u4nadyhunvhz";
     private final String USER_NAME = "Mute dawn";
     private final String USER_ID = "mute-dawn-0";
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i(TAG, "start it here");
         setContentView(R.layout.activity_main);
 
         StreamChat streamChat = new StreamChat(API_KEY);
@@ -33,8 +36,12 @@ public class MainActivity extends ChatActivity {
             e.printStackTrace();
         }
 
+        Log.i(TAG, "Made it here");
+
         Channel channel = new Channel("message", "general", null);
         streamChat.setChannel(channel);
+
+
 
         super.onCreate(savedInstanceState);
     }
