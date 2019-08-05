@@ -3,7 +3,7 @@ package com.getstream.sdk.chat.adapter;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Handler;
-import android.support.constraint.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;

@@ -18,13 +18,10 @@
             type="boolean" />
     </data>
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
 
-    <android.support.constraint.ConstraintLayout android:layout_height="match_parent" android:layout_width="match_parent" >
+
+    <androidx.constraintlayout.widget.ConstraintLayout android:layout_height="match_parent" android:layout_width="match_parent" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,7 +36,7 @@
                 android:background="@color/attach_more"
                 android:visibility="gone" />
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_add_file"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -183,9 +180,9 @@
                         android:layout_marginStart="15dp"
                         android:text="Upload a file" />
                 </LinearLayout>
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_select_photo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -221,7 +218,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/tv_select_title" />
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_media"
                     android:layout_width="match_parent"
                     android:layout_height="160dp"
@@ -254,10 +251,10 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_select_title" />
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_command"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -314,7 +311,7 @@
                 </FrameLayout>
 
 
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
                 android:id="@+id/tv_inputbox_back"
@@ -343,7 +340,7 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="10dp">
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_composer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -412,6 +409,5 @@
         </LinearLayout>
 
 
-     </android.support.constraint.ConstraintLayout>
-    </LinearLayout>
+     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

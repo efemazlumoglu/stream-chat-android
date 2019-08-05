@@ -27,13 +27,13 @@
             type="boolean" />
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/chat_theme"
         tools:context=".view.activity.ChatActivity">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="@dimen/abc_action_bar_default_height_material"
@@ -43,7 +43,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="PrivateResource">
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -120,11 +120,11 @@
                     app:layout_constraintEnd_toEndOf="@+id/iv_header_avatar"
                     app:layout_constraintStart_toEndOf="@+id/iv_header_avatar"
                     app:layout_constraintTop_toTopOf="@+id/iv_header_avatar" />
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </android.support.v7.widget.Toolbar>
+        </androidx.appcompat.widget.Toolbar>
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_message"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -206,5 +206,5 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/header" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

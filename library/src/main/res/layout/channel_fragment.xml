@@ -34,13 +34,13 @@
             type="boolean" />
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/chat_theme"
         tools:context=".view.fragment.ChannelFragment">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="@dimen/abc_action_bar_default_height_material"
@@ -50,7 +50,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="PrivateResource">
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -127,11 +127,11 @@
                     app:layout_constraintEnd_toEndOf="@+id/iv_header_avatar"
                     app:layout_constraintStart_toEndOf="@+id/iv_header_avatar"
                     app:layout_constraintTop_toTopOf="@+id/iv_header_avatar" />
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </android.support.v7.widget.Toolbar>
+        </androidx.appcompat.widget.Toolbar>
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_message"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -178,7 +178,7 @@
             android:background="@color/attach_more"
             android:visibility="gone" />
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_add_file"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -322,9 +322,9 @@
                     android:layout_marginStart="15dp"
                     android:text="Upload a file" />
             </LinearLayout>
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_select_photo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -360,7 +360,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/tv_select_title" />
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_media"
                 android:layout_width="match_parent"
                 android:layout_height="160dp"
@@ -393,9 +393,9 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_select_title" />
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_command"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -452,7 +452,7 @@
             </FrameLayout>
 
 
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/tv_inputbox_back"
@@ -481,7 +481,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="10dp">
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_composer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -580,5 +580,5 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/header" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
