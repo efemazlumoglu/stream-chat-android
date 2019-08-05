@@ -21,6 +21,7 @@ public class MainActivity extends ChatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "start it here");
         setContentView(R.layout.activity_main);
+        setTheme(R.style.GreenTheme);
 
         StreamChat streamChat = new StreamChat(API_KEY);
 

@@ -34,6 +34,7 @@ import com.getstream.sdk.chat.utils.StringUtility;
 import com.getstream.sdk.chat.utils.Utils;
 import com.getstream.sdk.chat.utils.roundedImageView.PorterShapeImageView;
 import com.getstream.sdk.chat.model.SelectAttachmentModel;
+import com.getstream.sdk.chat.view.MessageListViewStyle;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -95,9 +96,12 @@ public class MessageListItemViewHolder extends BaseMessageListItemViewHolder {
     private View.OnLongClickListener longClickListener;
     private Context context;
     private Message message;
+    private MessageListViewStyle style;
 
-    public MessageListItemViewHolder(int resId, ViewGroup viewGroup) {
+    public MessageListItemViewHolder(int resId, ViewGroup viewGroup, MessageListViewStyle s) {
         super(resId, viewGroup);
+        // TODO: This should use data bindings
+        style = s;
         cl_message = itemView.findViewById(R.id.cl_message);
         ll_typingusers = itemView.findViewById(R.id.ll_typing_indicator);
 
@@ -429,17 +433,20 @@ public class MessageListItemViewHolder extends BaseMessageListItemViewHolder {
 
             } else {
                 if (message.isIncoming())
+                    //color = style.getMessageBubbleColorOther();
                     background = R.drawable.round_incoming_text2;
                 else
+                    //color = style.getMessageBubbleColorMine();
                     background = R.drawable.round_outgoing_text2;
             }
             tv_text.setBackgroundResource(background);
         }
         // Set Color
         if (message.isIncoming()) {
-            tv_text.setTextColor(context.getResources().getColor(R.color.message_text_incoming));
+
+            tv_text.setTextColor(style.getMessageTextColorOther());
         } else {
-            tv_text.setTextColor(context.getResources().getColor(R.color.message_text_outgoing));
+            tv_text.setTextColor(style.getMessageTextColorMine());
         }
 
         // Set Click Listener

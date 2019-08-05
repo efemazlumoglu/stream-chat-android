@@ -31,9 +31,11 @@
         android:background="@color/chat_theme"
         tools:context=".view.activity.ChatActivity">
 
-        <com.getstream.sdk.chat.view.ChannelHeaderToolbar android:id="@+id/cht_header" android:layout_height="match_parent" android:layout_width="match_parent" />
+        <com.getstream.sdk.chat.view.ChannelHeaderToolbar
+            android:id="@+id/cht_header" android:layout_height="match_parent"
+            android:layout_width="match_parent" />
 
-        <com.getstream.sdk.chat.view.MessageListView android:id="@+id/rv_message"
+        <com.getstream.sdk.chat.view.MessageListView android:id="@+id/mlv_messageList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="10dp"
@@ -41,6 +43,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cht_header"
+            stream:messageTextColorMine="@color/white"
+            stream:messageBubbleColorMine="#1BB76E"
+            stream:messageTextColorOther="@color/white"
+            stream:messageBubbleColorOther="#1BB76E"
             tools:listitem="@layout/list_item_message" />
 
         <include
@@ -54,7 +60,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        
+
         <TextView
             style="@style/text_s"
             android:layout_width="0dp"
@@ -86,18 +92,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/header" />
-
-        <TextView
-            android:id="@+id/message_input2"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="i am doing it wrong somehow"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginBottom="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:visibility="gone"
-            />
 
 
         <com.getstream.sdk.chat.view.MessageInputView

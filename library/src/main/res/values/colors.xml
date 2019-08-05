@@ -47,4 +47,6 @@
     <color name="gap_message">#673AB7</color>
     <color name="gap_media_file">#00FF00</color>
     <color name="gap_attach">#FFEB3B</color>
+    <color name="bubble_main">#FF0000</color>
+    <color name="bubble_border">#00FF00</color>
 </resources>

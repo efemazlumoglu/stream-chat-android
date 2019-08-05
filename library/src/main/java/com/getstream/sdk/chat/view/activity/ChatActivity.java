@@ -86,9 +86,9 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
     private List<Message> channelMessages, threadMessages;
     // Adapter & LayoutManager
     private MessageListItemAdapter mChannelMessageAdapter, mThreadAdapter;
-    private RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-    private RecyclerView.LayoutManager mLayoutManager_thread = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-    private RecyclerView.LayoutManager mLayoutManager_thread_header = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+    private RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+    private RecyclerView.LayoutManager mLayoutManager_thread = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+    private RecyclerView.LayoutManager mLayoutManager_thread_header = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
     // Functions
     private MessageFunction messageFunction;
     private SendFileFunction sendFileFunction;
@@ -300,7 +300,7 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
     }
 
     private RecyclerView recyclerView() {
-        return isThreadMode() ? threadBinding.rvThread : binding.rvMessage;
+        return isThreadMode() ? threadBinding.rvThread : binding.mlvMessageList;
     }
 
     private boolean isNoHistory() {
@@ -390,14 +390,10 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
 
     private void configMessageRecyclerView() {
         mLayoutManager.scrollToPosition(channelMessages.size());
-        binding.rvMessage.setLayoutManager(mLayoutManager);
-        setScrollDownHideKeyboard(binding.rvMessage);
+        binding.mlvMessageList.setLayoutManager(mLayoutManager);
+        setScrollDownHideKeyboard(binding.mlvMessageList);
         setChannelMessageRecyclerViewAdapder();
     }
-
-
-
-
 
     private void setChannelMessageRecyclerViewAdapder() {
         mChannelMessageAdapter = new MessageListItemAdapter(this, this.channelResponse, channelMessages,
@@ -412,17 +408,17 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
             }
             return true;
         });
-        binding.rvMessage.setAdapter(mChannelMessageAdapter);
+        binding.mlvMessageList.setAdapterWithStyle(mChannelMessageAdapter);
         mViewModel.getChannelMessages().observe(this, (@Nullable List<Message> users) -> {
             if (scrollPosition == -1) return;
 
             mChannelMessageAdapter.notifyDataSetChanged();
             if (scrollPosition > 0) {
-                binding.rvMessage.scrollToPosition(scrollPosition);
+                binding.mlvMessageList.scrollToPosition(scrollPosition);
                 scrollPosition = 0;
                 return;
             }
-            binding.rvMessage.scrollToPosition(channelMessages.size());
+            binding.mlvMessageList.scrollToPosition(channelMessages.size());
         });
         mViewModel.setChannelMessages(channelMessages);
     }
@@ -847,7 +843,7 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
     public void onClickCloseThread(View v) {
         threadBinding.setShowThread(false);
         cleanEditView();
-        setScrollDownHideKeyboard(binding.rvMessage);
+        setScrollDownHideKeyboard(binding.mlvMessageList);
         isCallingThread = false;
     }
 
@@ -882,7 +878,7 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
         lVPosition = 0;
         fVPosition = 0;
         noHistoryThread = false;
-        binding.rvMessage.clearOnScrollListeners();
+        binding.mlvMessageList.clearOnScrollListeners();
         threadBinding.rvThread.clearOnScrollListeners();
         Utils.hideSoftKeyboard(this);
     }
@@ -1231,7 +1227,7 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
                 for (int i = newMessages.size() - 1; i > -1; i--)
                     channelMessages.add(0, newMessages.get(i));
 
-                scrollPosition = ((LinearLayoutManager) binding.rvMessage.getLayoutManager()).findLastCompletelyVisibleItemPosition() + response.getMessages().size();
+                scrollPosition = ((LinearLayoutManager) binding.mlvMessageList.getLayoutManager()).findLastCompletelyVisibleItemPosition() + response.getMessages().size();
                 mViewModel.setChannelMessages(channelMessages);
                 isCalling = false;
 

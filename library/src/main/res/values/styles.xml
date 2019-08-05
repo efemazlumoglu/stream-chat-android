@@ -91,9 +91,4 @@
     </style>
     <!--endregion-->
 
-    <!--region Chat-->
-    <style name="message_text">
-        <item name="android:textSize">@dimen/message_text_font_size</item>
-    </style>
-    <!--endregion-->
 </resources>

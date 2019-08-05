@@ -300,4 +300,12 @@ public class Message {
         }
         return false;
     }
+
+    public boolean isOther() {
+        return this.isIncoming();
+    }
+
+    public boolean isMine() {
+        return !this.isIncoming();
+    }
 }

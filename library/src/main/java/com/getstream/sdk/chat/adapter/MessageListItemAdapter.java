@@ -10,11 +10,12 @@ import android.view.ViewGroup;
 import com.getstream.sdk.chat.R;
 import com.getstream.sdk.chat.rest.Message;
 import com.getstream.sdk.chat.rest.response.ChannelResponse;
+import com.getstream.sdk.chat.view.MessageListViewStyle;
 
 import java.util.List;
 
 public class MessageListItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
+    private MessageListViewStyle style;
     private final String TAG = MessageListItemAdapter.class.getSimpleName();
 
     private ChannelResponse channelResponse;
@@ -55,7 +56,11 @@ public class MessageListItemAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new MessageListItemViewHolder(R.layout.list_item_message, parent);
+        return new MessageListItemViewHolder(R.layout.list_item_message, parent, style);
+    }
+
+    public void setStyle(MessageListViewStyle s) {
+        style = s;
     }
 
 
