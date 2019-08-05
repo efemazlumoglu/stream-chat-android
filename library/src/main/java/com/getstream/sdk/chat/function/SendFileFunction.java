@@ -22,6 +22,7 @@ import com.getstream.sdk.chat.adapter.MediaAttachmentAdapter;
 import com.getstream.sdk.chat.adapter.MediaAttachmentSelectedAdapter;
 import com.getstream.sdk.chat.databinding.ActivityChatBinding;
 import com.getstream.sdk.chat.databinding.ChannelFragmentBinding;
+import com.getstream.sdk.chat.databinding.ViewMessageInputBinding;
 import com.getstream.sdk.chat.model.Command;
 import com.getstream.sdk.chat.model.ModelType;
 import com.getstream.sdk.chat.rest.User;
@@ -53,14 +54,13 @@ public class SendFileFunction {
     CommandListItemAdapter commandListItemAdapter = null;
     List<Object> commands = null;
 
-    Activity activity;
-    ChannelFragmentBinding binding;
+    Context context;
+    ViewMessageInputBinding binding;
     ChannelResponse channelResponse;
 
-    public SendFileFunction(Activity activity, ChannelFragmentBinding binding, ChannelResponse channelResponse) {
-        this.activity = activity;
+    public SendFileFunction(Context context, ViewMessageInputBinding binding) {
+        this.context = context;
         this.binding = binding;
-        this.channelResponse = channelResponse;
     }
 
     public List<Attachment> getSelectedAttachments() {
@@ -92,88 +92,25 @@ public class SendFileFunction {
 
     public void openAnimationView(View view) {
         if (view.getVisibility() == View.VISIBLE) return;
-        activity.runOnUiThread(() -> {
-            Animation animOpen = AnimationUtils.loadAnimation(activity, R.anim.opening);
-            view.setVisibility(View.VISIBLE);
-            view.startAnimation(animOpen);
-            animOpen.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    binding.llComposer.bringToFront();
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-                }
-            });
-        });
+        view.setVisibility(View.VISIBLE);
     }
 
     public void closeAnimationView(View view) {
 
         if (view.getVisibility() != View.VISIBLE) return;
-        activity.runOnUiThread(() -> {
-            Animation animClose = AnimationUtils.loadAnimation(activity, R.anim.closing);
-            view.startAnimation(animClose);
-
-            animClose.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    view.setVisibility(View.GONE);
-                    view.clearAnimation();
-                    if (view.equals(binding.clSelectPhoto) || view.equals(binding.clCommand))
-                        binding.tvInputboxBack.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-                }
-            });
-        });
+        view.setVisibility(View.GONE);
     }
 
     public void fadeAnimationView(View view, boolean isFadeIn) {
-        activity.runOnUiThread(() -> {
-            if (isFadeIn) {
-                if (view.getVisibility() == View.VISIBLE) return;
-                AlphaAnimation animation = new AlphaAnimation(0.2f, 1.0f);
-                animation.setDuration(50);
-                view.setAlpha(1f);
-                view.startAnimation(animation);
-                view.setVisibility(View.VISIBLE);
-                view.setClickable(true);
-            } else {
-                if (view.getVisibility() == View.GONE) return;
-                Animation animation = AnimationUtils.loadAnimation(activity, R.anim.fade_out);
-                view.startAnimation(animation);
-                view.setClickable(false);
-                animation.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-                    }
+        if (isFadeIn) {
+            if (view.getVisibility() == View.VISIBLE) return;
 
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        view.setVisibility(View.GONE);
-                        view.requestLayout();
-                        view.clearAnimation();
-                        view.setClickable(false);
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-                    }
-                });
-            }
-        });
+            view.setVisibility(View.VISIBLE);
+            view.setClickable(true);
+        } else {
+            if (view.getVisibility() == View.GONE) return;
+            view.setVisibility(View.GONE);
+        }
     }
 
     private void configSelectAttachView(boolean isMedia, List<Attachment> editAttachments) {
@@ -186,47 +123,43 @@ public class SendFileFunction {
 
         binding.setIsAttachFile(!isMedia);
         if (isMedia) {
-            List<Attachment> attachments = Global.getAllShownImagesPath(activity);
-            activity.runOnUiThread(() -> {
-                mediaAttachmentAdapter = new MediaAttachmentAdapter(activity, attachments, position -> {
-                    Attachment attachment = attachments.get(position);
-                    attachment.config.setSelected(!attachment.config.isSelected());
-                    mediaAttachmentAdapter.notifyItemChanged(position);
-                    updateComposerViewBySelectedMedia(attachments, attachment);
-                });
-                binding.rvMedia.setAdapter(mediaAttachmentAdapter);
-                binding.progressBarFileLoader.setVisibility(View.GONE);
-                // edit
-                if (editAttachments != null) {
-                    binding.rvComposer.setVisibility(View.VISIBLE);
-                    setSelectedMediaAttachmentRecyclerViewAdapter(attachments);
-                }
+            List<Attachment> attachments = Global.getAllShownImagesPath(context);
+            mediaAttachmentAdapter = new MediaAttachmentAdapter(context, attachments, position -> {
+                Attachment attachment = attachments.get(position);
+                attachment.config.setSelected(!attachment.config.isSelected());
+                mediaAttachmentAdapter.notifyItemChanged(position);
+                updateComposerViewBySelectedMedia(attachments, attachment);
             });
+            binding.rvMedia.setAdapter(mediaAttachmentAdapter);
+            binding.progressBarFileLoader.setVisibility(View.GONE);
+            // edit
+            if (editAttachments != null) {
+                binding.rvComposer.setVisibility(View.VISIBLE);
+                setSelectedMediaAttachmentRecyclerViewAdapter(attachments);
+            }
         } else {
             Global.attachments = new ArrayList<>();
             List<Attachment> attachments = Global.Search_Dir(Environment.getExternalStorageDirectory());
-            activity.runOnUiThread(() -> {
-                if (attachments.size() > 0) {
-                    fileAttachmentAdapter = new AttachmentListAdapter(activity, attachments, true, true);
-                    binding.lvFile.setAdapter(fileAttachmentAdapter);
-                    binding.lvFile.setOnItemClickListener((AdapterView<?> parent, View view,
-                                                           int position, long id) -> {
-                        Attachment attachment = attachments.get(position);
+            if (attachments.size() > 0) {
+                fileAttachmentAdapter = new AttachmentListAdapter(context, attachments, true, true);
+                binding.lvFile.setAdapter(fileAttachmentAdapter);
+                binding.lvFile.setOnItemClickListener((AdapterView<?> parent, View view,
+                                                       int position, long id) -> {
+                    Attachment attachment = attachments.get(position);
 
-                        attachment.config.setSelected(!attachment.config.isSelected());
-                        fileAttachmentAdapter.notifyDataSetChanged();
-                        updateComposerViewBySelectedFile(attachments, attachment);
-                    });
-                } else {
-                    Utils.showMessage(activity, "There is no file");
-                }
-                binding.progressBarFileLoader.setVisibility(View.GONE);
-                // edit
-                if (editAttachments != null) {
-                    binding.lvComposer.setVisibility(View.VISIBLE);
-                    setSelectedFileAttachmentListAdapter(attachments);
-                }
-            });
+                    attachment.config.setSelected(!attachment.config.isSelected());
+                    fileAttachmentAdapter.notifyDataSetChanged();
+                    updateComposerViewBySelectedFile(attachments, attachment);
+                });
+            } else {
+                Utils.showMessage(context, "There is no file");
+            }
+            binding.progressBarFileLoader.setVisibility(View.GONE);
+            // edit
+            if (editAttachments != null) {
+                binding.lvComposer.setVisibility(View.VISIBLE);
+                setSelectedFileAttachmentListAdapter(attachments);
+            }
         }
     }
 
@@ -283,7 +216,7 @@ public class SendFileFunction {
     }
 
     private void setSelectedMediaAttachmentRecyclerViewAdapter(final List<Attachment> attachments) {
-        selectedMediaAttachmentAdapter = new MediaAttachmentSelectedAdapter(activity, selectedAttachments, (int position) -> {
+        selectedMediaAttachmentAdapter = new MediaAttachmentSelectedAdapter(context, selectedAttachments, (int position) -> {
             Attachment attachment1 = selectedAttachments.get(position);
             attachment1.config.setSelected(false);
             selectedAttachments.remove(attachment1);
@@ -349,7 +282,7 @@ public class SendFileFunction {
     }
 
     private void setSelectedFileAttachmentListAdapter(final List<Attachment> attachments) {
-        selectedFileAttachmentAdapter = new AttachmentListAdapter(activity, selectedAttachments, true, false);
+        selectedFileAttachmentAdapter = new AttachmentListAdapter(context, selectedAttachments, true, false);
         binding.lvComposer.setAdapter(selectedFileAttachmentAdapter);
         binding.lvComposer.setOnItemClickListener((AdapterView<?> adapterView, View view, int position, long l) -> {
             Attachment attachment1 = selectedAttachments.get(position);
@@ -388,7 +321,7 @@ public class SendFileFunction {
             MultipartBody.Part part = MultipartBody.Part.createFormData("file", file.getName(), fileReqBody);
             Global.mRestController.sendImage(this.channelResponse.getChannel().getId(), part, callback, (String errMsg, int errCode) -> {
                 Log.d(TAG, "Send image Error:" + errMsg);
-                Utils.showMessage(this.activity, "Failed upload image!");
+                Utils.showMessage(this.context, "Failed upload image!");
                 errCallback.onError(errMsg, errCode);
                 binding.setActiveMessageSend(true);
             });
@@ -398,7 +331,7 @@ public class SendFileFunction {
             Global.mRestController.sendFile(this.channelResponse.getChannel().getId(), part, callback, (String errMsg, int errCode) -> {
                 errCallback.onError(errMsg, errCode);
                 Log.d(TAG, "Send file Error:" + errMsg);
-                Utils.showMessage(this.activity, "Failed upload file!");
+                Utils.showMessage(this.context, "Failed upload file!");
                 binding.setActiveMessageSend(true);
             });
         }
@@ -503,7 +436,7 @@ public class SendFileFunction {
         String title = binding.tvCommandTitle.getContext().getResources().getString(isCommand ? R.string.command_title : R.string.mention_title);
         binding.tvCommandTitle.setText(title);
         binding.tvCommand.setText("");
-        commandListItemAdapter = new CommandListItemAdapter(this.activity, commands, isCommand);
+        commandListItemAdapter = new CommandListItemAdapter(this.context, commands, isCommand);
         binding.lvCommand.setAdapter(commandListItemAdapter);
         openCommandView();
         binding.lvCommand.setOnItemClickListener((AdapterView<?> adapterView, View view, int i, long l) -> {

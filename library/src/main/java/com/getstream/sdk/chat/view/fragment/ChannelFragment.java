@@ -274,7 +274,7 @@ public class ChannelFragment extends Fragment implements WSResponseHandler {
         channelMessages = channelResponse.getMessages();
         checkEphemeralMessages();
         messageFunction = new MessageFunction(this.channelResponse);
-        sendFileFunction = new SendFileFunction(getActivity(), binding, channelResponse);
+        //sendFileFunction = new SendFileFunction(getActivity(), binding);
         checkReadMark();
         noHistory = channelMessages.size() < Constant.CHANNEL_MESSAGE_LIMIT;
         noHistoryThread = false;

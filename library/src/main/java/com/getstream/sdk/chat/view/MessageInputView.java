@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -16,9 +17,14 @@ import android.widget.RelativeLayout;
 import com.getstream.sdk.chat.R;
 import com.getstream.sdk.chat.databinding.ViewMessageInputBinding;
 import com.getstream.sdk.chat.function.SendFileFunction;
+import com.getstream.sdk.chat.model.Attachment;
 import com.getstream.sdk.chat.rest.Message;
 import com.getstream.sdk.chat.utils.GridSpacingItemDecoration;
 import com.getstream.sdk.chat.utils.Utils;
+import com.getstream.sdk.chat.view.activity.ChatActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -37,21 +43,23 @@ public class MessageInputView extends RelativeLayout implements View.OnClickList
 
     /*
     TODO:
-    - Solve Caused by: java.lang.RuntimeException: view must have a tag
-    - Attachment listener...
-    - Commands listener
-    - Data bindings (rename)
+    - MessageInputView needs to be aware of the channel (for the list of commands, perhaps other settings);
+    - SendFileFunction (attachments and commands needs extensive changes);
+    - Data bindings need to be renamed, super confusing atm
     - Make more things configurable
     - Documentation
      */
 
+    final String TAG = MessageInputView.class.getSimpleName();
+
     // binding for this view
     private ViewMessageInputBinding binding;
+
 
     // listeners
     private SendMessageListener sendMessageListener;
     private TypingListener typingListener;
-    private AttachmentsListener attachmentsListener;
+    private AttachmentListener attachmentListener;
     private OnFocusChangeListener onFocusChangeListener;
 
     // state
@@ -65,14 +73,7 @@ public class MessageInputView extends RelativeLayout implements View.OnClickList
     public MessageInputView(Context context) {
         super(context);
 
-
-        // TODO: make this more dry
-        View myView = inflate(context, R.layout.view_message_input, this);
-        binding = ViewMessageInputBinding.bind(myView);
-        binding.setActiveMessageComposer(false);
-        binding.setActiveMessageSend(false);
-        binding.tvSend.setOnClickListener(this);
-        binding.etMessage.setOnFocusChangeListener(this);
+        binding = this.initBinding(context);
 
         this.initAttachmentUI(context);
     }
@@ -80,30 +81,42 @@ public class MessageInputView extends RelativeLayout implements View.OnClickList
     // https://blog.danlew.net/2016/07/19/a-deep-dive-into-android-view-constructors/
     public MessageInputView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        // parse the attributes
         TypedArray a = context.obtainStyledAttributes(attrs,
                 R.styleable.MessageInputView, 0, 0);
         String hintText = a.getString(R.styleable.MessageInputView_inputHint);
         a.recycle();
 
         // setup the bindings
-        //View myView = inflate(context, R.layout.view_message_input, this);
+        binding = this.initBinding(context);
+        binding.etMessage.setHint(hintText);
 
+        this.initAttachmentUI(context);
+    }
+
+    private ViewMessageInputBinding initBinding(Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
         binding = ViewMessageInputBinding.inflate(inflater, this, true);
 
-        //binding = ViewMessageInputBinding.bind(myView);
         binding.setActiveMessageComposer(false);
         binding.setActiveMessageSend(false);
-        binding.etMessage.setHint(hintText);
-        binding.tvSend.setOnClickListener(this);
-        binding.etMessage.setOnFocusChangeListener(this);
 
-        this.initAttachmentUI(context);
+        binding.tvSend.setOnClickListener(this);
+        binding.tvOpenAttach.setOnClickListener(this);
+        binding.etMessage.setOnFocusChangeListener(this);
+        binding.etMessage.addTextChangedListener(this);
+        return binding;
+    }
+
+    public List<Attachment> GetAttachments() {
+        List<Attachment> a = new ArrayList<>();
+        return a;
     }
 
 
     private void initAttachmentUI(Context context) {
         // TODO: make the attachment UI into it's own view and allow you to change it.
+        sendFileFunction = new SendFileFunction(context, binding);
         binding.rvMedia.setLayoutManager(new GridLayoutManager(context, 4, LinearLayoutManager.VERTICAL, false));
         binding.rvMedia.hasFixedSize();
         binding.rvComposer.setLayoutManager(new GridLayoutManager(context, 1, LinearLayoutManager.HORIZONTAL, false));
@@ -174,9 +187,14 @@ public class MessageInputView extends RelativeLayout implements View.OnClickList
     @Override
     public void onClick(View v) {
         int id = v.getId();
+        Log.i(TAG, "click click");
         if (id == R.id.tv_send) {
             this.onSendMessage(binding.etMessage.getText().toString());
             this.stopTyping();
+        } else if (id == R.id.tv_openAttach) {
+            // open the attachment drawer
+            Log.i(TAG, "opening the attachment drawer");
+            binding.setIsAttachFile(true);
         }
     }
 
@@ -193,11 +211,14 @@ public class MessageInputView extends RelativeLayout implements View.OnClickList
     @Override
     public void afterTextChanged(Editable s) {
         String messageText = this.getMessageText();
+        Log.i(TAG, "Length is " + s.length());
         if (s.length() > 0) {
-            this.startTyping();
+            this.keyStroke();
         } else {
             this.stopTyping();
         }
+        // detect commands
+        sendFileFunction.checkCommand(messageText);
     }
 
     @Override
@@ -206,7 +227,7 @@ public class MessageInputView extends RelativeLayout implements View.OnClickList
             this.stopTyping();
         }
 
-        binding.setActiveMessageComposer(hasFocus);
+        //binding.setActiveMessageComposer(hasFocus);
     }
 
     private void onSendMessage(String input) {
@@ -230,10 +251,10 @@ public class MessageInputView extends RelativeLayout implements View.OnClickList
         }
     }
 
-    private void startTyping() {
+    private void keyStroke() {
         isTyping = true;
         if (typingListener != null) {
-            typingListener.onStartTyping();
+            typingListener.onKeystroke();
         }
     }
 
@@ -251,15 +272,16 @@ public class MessageInputView extends RelativeLayout implements View.OnClickList
     /**
      * This interface is called when you add an attachment
      */
-    public interface AttachmentsListener {
+    public interface AttachmentListener {
         void onAddAttachments();
     }
+
 
     /**
      * A simple interface for typing events
      */
     public interface TypingListener {
-        void onStartTyping();
+        void onKeystroke();
 
         void onStopTyping();
     }

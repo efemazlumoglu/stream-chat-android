@@ -421,23 +421,28 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
 
                 });
 
+        ChatActivity a = this;
+
         binding.messageInput.setOnSendMessageListener(new MessageInputView.SendMessageListener() {
             @Override
             public void onSendMessage(String input) {
                 // TODO send the message
-
+                Log.i(TAG, "actually sending a message, epic");
+                a.sendMessage(input);
             }
         });
 
         binding.messageInput.setTypingListener(new MessageInputView.TypingListener() {
             @Override
-            public void onStartTyping() {
+            public void onKeystroke() {
                 // TODO: forward to the client
+                Log.i(TAG, "i entered a letter, awesome");
             }
 
             @Override
             public void onStopTyping() {
                 // TODO:  forward to the client
+                Log.i(TAG, "stop typing");
             }
         });
     }
@@ -550,7 +555,7 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
         if (binding.messageInput.IsEditing()) {
             updateMessage(binding.messageInput.getMessageText());
         } else {
-            sendNewMessage(messageText, sendFileFunction.getSelectedAttachments(), null);
+            sendNewMessage(messageText, binding.messageInput.GetAttachments(), null);
         }
 
     }
@@ -581,7 +586,6 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
                         Utils.showMessage(ChatActivity.this, errMsg);
                     }
                 });
-        initSendMessage();
     }
 
     public void updateMessage(String messageText) {
@@ -596,7 +600,6 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
                 new MessageSendListener() {
                     @Override
                     public void onSuccess(MessageResponse response) {
-                        initSendMessage();
                         response.getMessage().setDelivered(true);
                         binding.messageInput.CancelEditMessage();
                         binding.messageInput.setEnabled(true);
@@ -639,7 +642,6 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
     public void progressSendMessage(Message message, String resendMessageId) {
         if (resendMessageId != null) {
             Global.removeEphemeralMessage(channel.getId(), resendMessageId);
-            initSendMessage();
         } else {
             if (Global.isCommandMessage(message) ||
                     message.getType().equals(ModelType.message_error)) {
@@ -659,13 +661,9 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
             messages().get(messages().size() - 1).setDelivered(true);
     }
 
-    private void initSendMessage() {
-        sendFileFunction.initSendMessage();
-    }
 
     private void sendOfflineMessage() {
         handleAction(createEphemeralMessage(true));
-        initSendMessage();
     }
 
     private Message createEphemeralMessage(boolean isOffle) {
@@ -715,7 +713,6 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
     }
 
     private void cancelEditMessage() {
-        initSendMessage();
         binding.messageInput.CancelEditMessage();
 
     }
