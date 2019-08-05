@@ -312,7 +312,6 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
     // region Config UIs
     private void configUIs() {
         configActionBar(); // Hides Action Bar
-        configHeaderView(); // Header View
         configCustomMessageItemView(); // custom MessageItemView
         configMessageInputView(); // Message Input box
         configMessageRecyclerView(); // Message RecyclerView
@@ -338,65 +337,7 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
         messageItemViewHolderName = Global.component.message.getMessageItemViewHolderName();
     }
 
-    private void configHeaderView() {
-        // Avatar
-        if (!TextUtils.isEmpty(channel.getName())) {
-            binding.tvChannelInitial.setText(channel.getInitials());
-            Utils.circleImageLoad(binding.ivHeaderAvatar, channel.getImage());
-            if (StringUtility.isValidImageUrl(channel.getImage())) {
-                binding.ivHeaderAvatar.setVisibility(View.VISIBLE);
-                binding.tvChannelInitial.setVisibility(View.INVISIBLE);
-            } else {
-                binding.ivHeaderAvatar.setVisibility(View.INVISIBLE);
-                binding.tvChannelInitial.setVisibility(View.VISIBLE);
-            }
-        } else {
-            User opponent = Global.getOpponentUser(channelResponse);
-            if (opponent != null) {
-                binding.tvChannelInitial.setText(opponent.getUserInitials());
-                Utils.circleImageLoad(binding.ivHeaderAvatar, opponent.getImage());
-                binding.tvChannelInitial.setVisibility(View.VISIBLE);
-                binding.ivHeaderAvatar.setVisibility(View.VISIBLE);
-            } else {
-                binding.tvChannelInitial.setVisibility(View.VISIBLE);
-                binding.ivHeaderAvatar.setVisibility(View.INVISIBLE);
-            }
-        }
-        // Channel name
-        String channelName = "";
 
-        if (!TextUtils.isEmpty(channelResponse.getChannel().getName())) {
-            channelName = channelResponse.getChannel().getName();
-        } else {
-            User opponent = Global.getOpponentUser(channelResponse);
-            if (opponent != null) {
-                channelName = opponent.getName();
-            }
-        }
-
-        binding.tvChannelName.setText(channelName);
-
-        // Last Active
-        Message lastMessage = channelResponse.getOpponentLastMessage();
-        configHeaderLastActive(lastMessage);
-        // Online Mark
-        try {
-            if (Global.getOpponentUser(channelResponse) == null)
-                binding.ivActiveMark.setVisibility(View.GONE);
-            else {
-                if (Global.getOpponentUser(channelResponse).getOnline()) {
-                    binding.ivActiveMark.setVisibility(View.VISIBLE);
-                } else {
-                    binding.ivActiveMark.setVisibility(View.GONE);
-                }
-            }
-        } catch (Exception e) {
-            binding.ivActiveMark.setVisibility(View.GONE);
-        }
-
-        binding.tvBack.setVisibility(singleConversation ? View.INVISIBLE : View.VISIBLE);
-        binding.tvBack.setOnClickListener((View v) -> finish());
-    }
 
     private void configMessageInputView() {
 
@@ -454,25 +395,7 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
         setChannelMessageRecyclerViewAdapder();
     }
 
-    private void configHeaderLastActive(@Nullable Message message) {
-        if (message == null || message.getUser().isMe()) {
-            return;
-        }
-        binding.tvActive.setVisibility(View.GONE);
-        String lastActive = null;
-        if (message != null) {
-            if (!TextUtils.isEmpty(Global.differentTime(message.getCreated_at()))) {
-                lastActive = Global.differentTime(message.getCreated_at());
-            }
-        }
 
-        if (TextUtils.isEmpty(lastActive)) {
-            binding.tvActive.setVisibility(View.GONE);
-        } else {
-            binding.tvActive.setVisibility(View.VISIBLE);
-            binding.tvActive.setText(lastActive);
-        }
-    }
 
 
 
@@ -1089,7 +1012,6 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
     }
 
     private void newMessageEvent(Message message) {
-        configHeaderLastActive(message);
         Global.setStartDay(Arrays.asList(message), getLastMessage());
 
         switch (message.getType()) {

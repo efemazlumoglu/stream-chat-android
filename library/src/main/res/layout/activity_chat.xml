@@ -10,8 +10,6 @@
             name="viewModel"
             type="com.getstream.sdk.chat.viewmodel.ChatActivityViewModel" />
 
-
-
         <variable
             name="showMainProgressbar"
             type="boolean" />
@@ -19,8 +17,6 @@
         <variable
             name="showLoadMoreProgressbar"
             type="boolean" />
-
-
 
         <variable
             name="noConnection"
@@ -30,127 +26,22 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
         android:background="@color/chat_theme"
         tools:context=".view.activity.ChatActivity">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/header"
+        <com.getstream.sdk.chat.view.ChannelHeaderToolbar android:id="@+id/cht_header" android:layout_height="match_parent" android:layout_width="match_parent" />
+
+        <com.getstream.sdk.chat.view.MessageListView android:id="@+id/rv_message"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/abc_action_bar_default_height_material"
-            android:background="@drawable/toolbarback"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="PrivateResource">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/tv_back"
-                    style="@style/text"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="20dp"
-                    android:background="@drawable/round_thread_close"
-                    android:gravity="center"
-                    android:text="‹"
-                    android:textSize="20sp"
-                    android:visibility="invisible"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="5dp"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/iv_header_avatar"
-                    app:layout_constraintStart_toEndOf="@+id/tv_back"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <TextView
-                        android:id="@+id/tv_channel_name"
-                        style="@style/text_b"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_horizontal" />
-
-                    <TextView
-                        android:id="@+id/tv_active"
-                        style="@style/text_s"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/tv_channel_initial"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:background="@drawable/circle_channel_initials"
-                    android:gravity="center"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@+id/iv_header_avatar"
-                    app:layout_constraintEnd_toEndOf="@+id/iv_header_avatar"
-                    app:layout_constraintStart_toStartOf="@+id/iv_header_avatar"
-                    app:layout_constraintTop_toTopOf="@+id/iv_header_avatar" />
-
-                <ImageView
-                    android:id="@+id/iv_header_avatar"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginEnd="20dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:id="@+id/iv_active_mark"
-                    android:layout_width="7dp"
-                    android:layout_height="7dp"
-                    android:background="@drawable/circle_user_online"
-                    android:visibility="gone"
-                    app:layout_constraintEnd_toEndOf="@+id/iv_header_avatar"
-                    app:layout_constraintStart_toEndOf="@+id/iv_header_avatar"
-                    app:layout_constraintTop_toTopOf="@+id/iv_header_avatar" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </androidx.appcompat.widget.Toolbar>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_message"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="match_parent"
             android:layout_marginBottom="10dp"
-            app:layout_constraintBottom_toTopOf="@+id/ll_composer"
+            app:layout_constraintBottom_toTopOf="@+id/message_input"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/header"
+            app:layout_constraintTop_toBottomOf="@+id/cht_header"
             tools:listitem="@layout/list_item_message" />
-
-        <!--<TextView-->
-        <!--android:id="@+id/tv_new_message"-->
-        <!--style="@style/text_s"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginBottom="5dp"-->
-        <!--android:background="@drawable/round_action_send"-->
-        <!--android:gravity="center"-->
-        <!--android:paddingStart="8dp"-->
-        <!--android:paddingEnd="8dp"-->
-        <!--android:text="New Messages!"-->
-        <!--android:textColor="@color/white"-->
-        <!--android:visibility="gone"-->
-        <!--app:layout_constraintBottom_toTopOf="@+id/ll_composer"-->
-        <!--app:layout_constraintEnd_toEndOf="@+id/ll_composer"-->
-        <!--app:layout_constraintStart_toStartOf="@+id/ll_composer" />-->
 
         <include
             android:id="@+id/cl_thread"
@@ -163,18 +54,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-
-
-
-        <com.getstream.sdk.chat.view.MessageInputView
-            android:id="@+id/message_input"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:background="@color/chat_theme"
-            stream:inputHint="what a fun day"
-            
-            />
-
+        
         <TextView
             style="@style/text_s"
             android:layout_width="0dp"
@@ -206,6 +86,33 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/header" />
+
+        <TextView
+            android:id="@+id/message_input2"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="i am doing it wrong somehow"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="gone"
+            />
+
+
+        <com.getstream.sdk.chat.view.MessageInputView
+            android:id="@+id/message_input"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:background="@color/chat_theme"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="32dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            stream:inputHint="what a fun day"
+
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
