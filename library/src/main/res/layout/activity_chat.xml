@@ -172,6 +172,7 @@
             android:layout_width="match_parent"
             android:background="@color/chat_theme"
             stream:inputHint="what a fun day"
+            
             />
 
         <TextView
