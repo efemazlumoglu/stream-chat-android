@@ -301,7 +301,7 @@ public class Message {
         return false;
     }
 
-    public boolean isOther() {
+    public boolean isTheirs() {
         return this.isIncoming();
     }
 

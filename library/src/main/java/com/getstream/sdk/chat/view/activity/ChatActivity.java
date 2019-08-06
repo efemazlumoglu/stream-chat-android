@@ -199,10 +199,14 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
     }
     // endregion
 
+    public int getLayout() {
+        return R.layout.activity_chat;
+    }
+
     // region Init
     private void init() {
         // set binding
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_chat);
+        binding = DataBindingUtil.setContentView(this, this.getLayout());
         // set WS handler
         Global.webSocketService.setWSResponseHandler(this, getApplicationContext());
 
@@ -347,6 +351,7 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
             lockRVScrollListener = hasFocus;
         });
 
+        // TODO: move this
         KeyboardVisibilityEvent.setEventListener(
                 this, (boolean isOpen) -> {
                     if (!isOpen) {

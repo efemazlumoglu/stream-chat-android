@@ -49,12 +49,13 @@ public class MessageListItemAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             Class[] cArg = new Class[2];
             cArg[0] = int.class;
             cArg[1] = ViewGroup.class;
+            // TODO, what does this do?
             Object obj = tempClass.getDeclaredConstructor(cArg).newInstance(itemLayoutId, parent);
             if (obj instanceof BaseMessageListItemViewHolder) {
                 return ((BaseMessageListItemViewHolder) obj);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         return new MessageListItemViewHolder(R.layout.list_item_message, parent, style);
     }

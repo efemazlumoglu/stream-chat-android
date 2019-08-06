@@ -7,6 +7,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -48,6 +51,11 @@ import ru.noties.markwon.image.ImagesPlugin;
 
 public class MessageListItemViewHolder extends BaseMessageListItemViewHolder {
     // region LifeCycle
+    /**
+    * TODO:
+     * - use data binding
+     * - handle the logic of my message vs their messages once instead of 100 times
+     */
     final String TAG = MessageListItemViewHolder.class.getSimpleName();
 
     private ConstraintLayout cl_message, headerView;
@@ -423,30 +431,23 @@ public class MessageListItemViewHolder extends BaseMessageListItemViewHolder {
         if (StringUtility.isEmoji(message.getText()))
             tv_text.setBackgroundResource(0); // Check Emoji Text
         else {
-            int background;
-            if (containerStyleOne(position)) {
-                if (message.isIncoming())
-                    background = (message.getAttachments() == null || message.getAttachments().isEmpty()) ? R.drawable.round_incoming_text1 : R.drawable.round_incoming_text2;
-                else {
-                    background = (message.getAttachments() == null || message.getAttachments().isEmpty()) ? R.drawable.round_outgoing_text1 : R.drawable.round_outgoing_text2;
-                }
+            Drawable background;
 
+            if (message.isIncoming()) {
+                //color = style.getMessageBubbleColorOther();
+                background = style.getMessageBubbleDrawableTheirs();
             } else {
-                if (message.isIncoming())
-                    //color = style.getMessageBubbleColorOther();
-                    background = R.drawable.round_incoming_text2;
-                else
-                    //color = style.getMessageBubbleColorMine();
-                    background = R.drawable.round_outgoing_text2;
+                //color = style.getMessageBubbleColorMine();
+                background = style.getMessageBubbleDrawableMine();
             }
-            tv_text.setBackgroundResource(background);
+            tv_text.setBackground(background);
         }
         // Set Color
-        if (message.isIncoming()) {
-
-            tv_text.setTextColor(style.getMessageTextColorOther());
-        } else {
+        if (message.isMine()) {
             tv_text.setTextColor(style.getMessageTextColorMine());
+
+        } else {
+            tv_text.setTextColor(style.getMessageTextColorTheirs());
         }
 
         // Set Click Listener
@@ -653,35 +654,13 @@ public class MessageListItemViewHolder extends BaseMessageListItemViewHolder {
     }
 
     private void configAttachViewBackground(View view) {
-        int background;
+        Drawable background;
         if (message.isIncoming()) {
-            if (containerStyleOne(position)) {
-                if (view.equals(lv_attachment_file)) {
-                    if (cl_attachment_media.getVisibility() == View.VISIBLE) {
-                        background = R.drawable.round_incoming_text2;
-                    } else {
-                        background = R.drawable.round_incoming_text1;
-                    }
-                } else
-                    background = R.drawable.round_incoming_text1;
-            } else {
-                background = R.drawable.round_incoming_text2;
-            }
+            background = style.getMessageBubbleDrawableTheirs();
         } else {
-            if (containerStyleOne(position)) {
-                if (view.equals(lv_attachment_file)) {
-                    if (cl_attachment_media.getVisibility() == View.VISIBLE) {
-                        background = R.drawable.round_outgoing_text2;
-                    } else {
-                        background = R.drawable.round_outgoing_text1;
-                    }
-                } else
-                    background = R.drawable.round_outgoing_text1;
-            } else {
-                background = R.drawable.round_outgoing_text2;
-            }
+            background = style.getMessageBubbleDrawableMine();
         }
-        view.setBackgroundResource(background);
+        view.setBackground(background);
     }
 
     private void configImageThumbBackground(Attachment attachment) {

@@ -5,9 +5,9 @@
     </declare-styleable>
     <declare-styleable name="MessageListView">
         <attr name="messageTextColorMine" format="color"/>
-        <attr name="messageBubbleColorMine" format="color"/>
-        <attr name="messageTextColorOther" format="color"/>
-        <attr name="messageBubbleColorOther" format="color"/>
+        <attr name="messageTextColorTheirs" format="color"/>
+        <attr name="messageBubbleDrawableMine" format="reference"/>
+        <attr name="messageBubbleDrawableTheirs" format="reference"/>
     </declare-styleable>
     <declare-styleable name="MessageItemView">
         <attr name="messageId" format="string" />
@@ -50,6 +50,6 @@
             <enum name="none" value="5"/>
         </attr>
     </declare-styleable>
-    <attr name="streamMessageMineStyle" format="reference" />
+    <attr name="message_style" format="reference" />
 
 </resources>

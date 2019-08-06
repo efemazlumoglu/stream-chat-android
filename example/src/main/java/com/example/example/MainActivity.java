@@ -42,8 +42,6 @@ public class MainActivity extends ChatActivity {
         Channel channel = new Channel("message", "general", null);
         streamChat.setChannel(channel);
 
-
-
         super.onCreate(savedInstanceState);
     }
 }

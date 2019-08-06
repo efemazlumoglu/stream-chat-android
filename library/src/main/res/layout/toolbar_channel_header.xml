@@ -28,11 +28,10 @@
                 android:layout_height="30dp"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="20dp"
-                android:background="@drawable/round_thread_close"
                 android:gravity="center"
                 android:text="‹"
+                android:textColor="#FFF"
                 android:textSize="20sp"
-                android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -52,6 +51,8 @@
                 <TextView
                     android:id="@+id/tv_channel_name"
                     style="@style/text_b"
+                    android:text="ChannelName"
+                    android:textColor="#FFF"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal" />

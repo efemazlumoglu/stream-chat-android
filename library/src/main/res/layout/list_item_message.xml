@@ -222,6 +222,7 @@
 
         <TextView
             android:id="@+id/tv_text"
+            style="@style/message_style"
             android:textColor="@color/colorPrimary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
