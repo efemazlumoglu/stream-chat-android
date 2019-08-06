@@ -3,7 +3,7 @@ package com.getstream.sdk.chat.function;
 import android.app.Activity;
 
 import com.getstream.sdk.chat.adapter.CommandListItemAdapter;
-import com.getstream.sdk.chat.databinding.ActivityChatBinding;
+import com.getstream.sdk.chat.databinding.MyCustomBinding;
 import com.getstream.sdk.chat.model.Command;
 import com.getstream.sdk.chat.model.Channel;
 
@@ -15,12 +15,12 @@ public class CommandFunction {
     CommandListItemAdapter adapter = null;
 
     List<Command> commands = null;
+    MyCustomBinding binding;
 
     Activity activity;
-    ActivityChatBinding binding;
     Channel channel;
 
-    public CommandFunction(Activity activity, ActivityChatBinding binding, Channel channel) {
+    public CommandFunction(Activity activity, MyCustomBinding binding, Channel channel) {
         this.activity = activity;
         this.binding = binding;
         this.channel = channel;

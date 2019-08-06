@@ -74,7 +74,6 @@
             android:background="@drawable/round_chat_no_connection"
             android:gravity="center"
             android:text="@string/no_connection"
-            android:textColor="@color/red"
             android:visibility="visible"
             app:isGone="@{!noConnection}"
             app:layout_constraintBottom_toTopOf="@+id/ll_composer"

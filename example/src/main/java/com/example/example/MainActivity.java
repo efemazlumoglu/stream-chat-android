@@ -18,6 +18,11 @@ public class MainActivity extends ChatActivity {
     private static final String TAG = "MainActivity";
 
     @Override
+    public int getLayout() {
+        return R.layout.activity_chat2;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "start it here");
         setContentView(R.layout.activity_main);
