@@ -24,7 +24,7 @@ import android.view.View;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.getstream.sdk.chat.R;
 import com.getstream.sdk.chat.adapter.MessageListItemAdapter;
-import com.getstream.sdk.chat.databinding.MyCustomBinding;
+import com.getstream.sdk.chat.databinding.ActivityChatBinding;
 import com.getstream.sdk.chat.databinding.ViewThreadBinding;
 import com.getstream.sdk.chat.function.AttachmentFunction;
 import com.getstream.sdk.chat.function.EventFunction;
@@ -81,7 +81,7 @@ public class ChatActivity extends AppCompatActivity implements WSResponseHandler
 
     private ChatActivityViewModel mViewModel;
     // ActivityChatBinding
-    private MyCustomBinding binding;
+    private ActivityChatBinding binding;
     private ViewThreadBinding threadBinding;
     // Arguments for Channel
     private ChannelResponse channelResponse;

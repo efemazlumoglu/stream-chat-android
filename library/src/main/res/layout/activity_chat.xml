@@ -4,7 +4,7 @@
     xmlns:stream="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data class="MyCustomBinding">
+    <data>
 
         <variable
             name="viewModel"
