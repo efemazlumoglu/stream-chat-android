@@ -145,7 +145,8 @@ public class User {
     }
 
     public boolean isMe(){
-        return id.equals(StreamChat.getInstance().getUserId());
+        return true;
+//        return id.equals(StreamChat.getInstance().getUserId());
     }
 
     public String getUserInitials() {

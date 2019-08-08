@@ -231,8 +231,6 @@ public class UsersActivity extends AppCompatActivity {
         binding.setShowMainProgressbar(true);
         isCalling = true;
 
-        if (client == null)
-            client = StreamChat.getInstance();
         client.queryUsers(getUserQueryPayload(), new QueryUserListCallback() {
             @Override
             public void onSuccess(QueryUserListResponse response) {

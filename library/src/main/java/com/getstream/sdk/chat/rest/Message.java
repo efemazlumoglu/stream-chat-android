@@ -413,6 +413,19 @@ public class Message {
     }
 
     public boolean isIncoming() {
-        return !this.getUser().getId().equals(StreamChat.getInstance().getUserId());
+        return true;
+//        return !this.getUser().getId().equals(StreamChat.getInstance().getUserId());
+    }
+
+    public static String getMentionedText(Message message) {
+        if (message == null) return null;
+        String text = message.getText();
+        if (message.getMentionedUsers() != null && !message.getMentionedUsers().isEmpty()) {
+            for (User mentionedUser : message.getMentionedUsers()) {
+                String userName = mentionedUser.getName();
+                text = text.replace("@" + userName, "**" + "@" + userName + "**");
+            }
+        }
+        return text;
     }
 }

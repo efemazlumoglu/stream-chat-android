@@ -230,33 +230,33 @@ public class Channel {
         Channel channel = this;
         Log.d(TAG, "query a channel now");
         client.waitForConnection(
-                new ClientConnectionCallback() {
-                    @Override
-                    public void onSuccess() {
-                        client.getApiService().queryChannel(channel.id, client.getApiKey(), client.getUserId(), client.getConnectionId(), request).enqueue(new Callback<ChannelState>() {
-                            @Override
-                            public void onResponse(Call<ChannelState> call, Response<ChannelState> response) {
-                                ChannelState state = response.body();
-                                channel.channelState.init(state);
-                                // TODO: implement a good copy approach
-                                channel.config = state.getChannel().config;
-                                client.addChannelConfig(type, channel.config);
-                                client.addToActiveChannels(channel);
-                                callback.onSuccess(response.body());
-                            }
+            new ClientConnectionCallback() {
+                @Override
+                public void onSuccess() {
+                    client.getApiService().queryChannel(channel.id, client.getApiKey(), client.getUserId(), client.getConnectionId(), request).enqueue(new Callback<ChannelState>() {
+                        @Override
+                        public void onResponse(Call<ChannelState> call, Response<ChannelState> response) {
+                            ChannelState state = response.body();
+                            channel.channelState.init(state);
+                            // TODO: implement a good copy approach
+                            channel.config = state.getChannel().config;
+                            client.addChannelConfig(type, channel.config);
+                            client.addToActiveChannels(channel);
+                            callback.onSuccess(response.body());
+                        }
 
-                            @Override
-                            public void onFailure(Call<ChannelState> call, Throwable t) {
-                                callback.onError(t.getLocalizedMessage(), -1);
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onError(String errMsg, int errCode) {
-                        callback.onError(errMsg, errCode);
-                    }
+                        @Override
+                        public void onFailure(Call<ChannelState> call, Throwable t) {
+                            callback.onError(t.getLocalizedMessage(), -1);
+                        }
+                    });
                 }
+
+                @Override
+                public void onError(String errMsg, int errCode) {
+                    callback.onError(errMsg, errCode);
+                }
+            }
         );
     }
 
@@ -493,8 +493,8 @@ public class Channel {
     }
 
     public void handleReadEvent(Event event) {
-        channelState.setReadDateOfChannelLastMessage(event.getUser(), event.getCreatedAt());
-        channelState.getChannel().setLastMessageDate(event.getCreatedAt());
+//        channelState.setReadDateOfChannelLastMessage(event.getUser(), event.getCreatedAt());
+//        channelState.getChannel().setLastMessageDate(event.getCreatedAt());
     }
 
     /**

@@ -167,7 +167,8 @@ public class ChannelListItemViewHolder extends BaseChannelListItemViewHolder {
             iv_indicator.setVisibility(View.GONE);
             tv_indicator_initials.setVisibility(View.GONE);
             tv_unread.setVisibility(View.VISIBLE);
-            int unreadMessageCount = channelState.getUnreadMessageCount(StreamChat.getInstance().getUserId());
+//            int unreadMessageCount = channelState.getUnreadMessageCount(StreamChat.getInstance().getUserId());
+            int unreadMessageCount = 0;
             if (unreadMessageCount == 0) {
                 tv_unread.setVisibility(View.GONE);
                 return;
@@ -186,7 +187,7 @@ public class ChannelListItemViewHolder extends BaseChannelListItemViewHolder {
                 tv_last_message.setText("");
             }
         } else {
-            markwon.setMarkdown(tv_last_message, Global.getMentionedText(lastMessage));
+            markwon.setMarkdown(tv_last_message, Message.getMentionedText(lastMessage));
         }
 
         if (lastMessage.isToday())

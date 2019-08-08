@@ -413,7 +413,7 @@ public class MessageListItemViewHolder extends BaseMessageListItemViewHolder {
                     .usePlugin(StrikethroughPlugin.create())
                     .usePlugin(JLatexMathPlugin.create(tv_text.getTextSize()))
                     .build();
-        markwon.setMarkdown(tv_text, Global.getMentionedText(message));
+        markwon.setMarkdown(tv_text, Message.getMentionedText(message));
 
         // Set Text background
         if (StringUtility.isEmoji(message.getText()))

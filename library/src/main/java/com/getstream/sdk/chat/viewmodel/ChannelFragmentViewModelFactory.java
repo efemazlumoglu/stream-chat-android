@@ -15,9 +15,9 @@ public class ChannelFragmentViewModelFactory implements ViewModelProvider.Factor
 
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        if (modelClass.isAssignableFrom(ChannelViewModel.class)) {
-            return (T) new ChannelViewModel(channelState);
-        }
+//        if (modelClass.isAssignableFrom(ChannelViewModel.class)) {
+//            return (T) new ChannelViewModel(channelState.getChannel());
+//        }
         throw new IllegalArgumentException("Unknown ViewModel class");
     }
 }

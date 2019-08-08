@@ -178,7 +178,7 @@ public class ChannelFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        client = StreamChat.getInstance();
+//        client = StreamChat.getInstance();
         channel = client.channel(channelType, channelID, channelExtraData);
 
         // set binding
@@ -228,7 +228,7 @@ public class ChannelFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        client = StreamChat.getInstance();
+//        client = StreamChat.getInstance();
         channel = client.channel(channelType, channelID);
 
         subscribeToChannelEvents();
@@ -585,7 +585,7 @@ public class ChannelFragment extends Fragment {
             return true;
         });
         binding.rvMessage.setAdapter(mChannelMessageAdapter);
-        mViewModel.getChannelMessages().observe(this, (@Nullable List<Message> users) -> {
+        mViewModel.getMessages().observe(this, (@Nullable List<Message> users) -> {
             if (scrollPosition == -1) return;
 
             mChannelMessageAdapter.notifyDataSetChanged();
@@ -596,7 +596,7 @@ public class ChannelFragment extends Fragment {
             }
             binding.rvMessage.scrollToPosition(channelMessages.size());
         });
-        mViewModel.setChannelMessages(channelMessages);
+//        mViewModel.setChannelMessages(channelMessages);
     }
 
     private void setScrollDownHideKeyboard(RecyclerView recyclerView) {
@@ -1009,7 +1009,7 @@ public class ChannelFragment extends Fragment {
 
     private void configThread(@NonNull Message message) {
 
-        mViewModel.setReplyCount(message.getReplyCount());
+//        mViewModel.setReplyCount(message.getReplyCount());
         cleanEditView();
 
         thread_parentMessage = message;
@@ -1120,9 +1120,9 @@ public class ChannelFragment extends Fragment {
             case MESSAGE_NEW:
                 newMessageEvent(message);
                 break;
-            case MESSAGE_UPDATED:
-                if (isThreadMode() && message.getId().equals(thread_parentMessage.getId()))
-                    mViewModel.setReplyCount(message.getReplyCount());
+//            case MESSAGE_UPDATED:
+//                if (isThreadMode() && message.getId().equals(thread_parentMessage.getId()))
+//                    mViewModel.setReplyCount(message.getReplyCount());
             case MESSAGE_DELETED:
                 updateOrDeleteMessageEvent(event, message);
                 break;
@@ -1147,7 +1147,7 @@ public class ChannelFragment extends Fragment {
                 } else {
                     scrollPosition = 0;
                 }
-                mViewModel.setChannelMessages(channelMessages);
+//                mViewModel.setChannelMessages(channelMessages);
                 messageMarkRead();
                 break;
             case ModelType.message_ephemeral:
@@ -1167,7 +1167,7 @@ public class ChannelFragment extends Fragment {
                     mThreadAdapter.notifyDataSetChanged();
                     threadBinding.rvThread.scrollToPosition(threadMessages.size() - 1);
                 } else {
-                    mViewModel.setChannelMessages(messages());
+//                    mViewModel.setChannelMessages(messages());
                 }
                 break;
             case ModelType.message_reply:
@@ -1214,7 +1214,7 @@ public class ChannelFragment extends Fragment {
             }
             final int changedIndex = changedIndex_;
             scrollPosition = -1;
-            mViewModel.setChannelMessages(channelMessages);
+//            mViewModel.setChannelMessages(channelMessages);
             mChannelMessageAdapter.notifyItemChanged(changedIndex);
         }
     }
@@ -1234,7 +1234,7 @@ public class ChannelFragment extends Fragment {
             final int changedIndex = changedIndex_;
             getActivity().runOnUiThread(() -> {
                 scrollPosition = -1;
-                mViewModel.setChannelMessages(channelMessages);
+//                mViewModel.setChannelMessages(channelMessages);
                 mChannelMessageAdapter.notifyItemChanged(changedIndex);
             });
         } else if (message.getType().equals(ModelType.message_reply)) {
@@ -1376,7 +1376,7 @@ public class ChannelFragment extends Fragment {
                             channelMessages.add(0, newMessages.get(i));
 
                         scrollPosition = ((LinearLayoutManager) binding.rvMessage.getLayoutManager()).findLastCompletelyVisibleItemPosition() + response.getMessages().size();
-                        mViewModel.setChannelMessages(channelMessages);
+//                        mViewModel.setChannelMessages(channelMessages);
                         isCalling = false;
                     }
                     @Override

@@ -3,12 +3,8 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#2196F3</color>
-
-    <!--<color name="message_background_incoming">#FFE5C5</color>-->
-    <!--<color name="message_background_outgoing">#225CFA</color>-->
-    <!--<color name="message_text_incoming">#000000</color>-->
-    <!--<color name="message_text_outgoing">#FFFFFF</color>-->
-    <!--<color name="mesage_border">#14000000</color>-->
-
-    <!--<color name="chat_theme">#FFE6D8</color>-->
+    <color name="colorPrimaryLight">#64b5f6</color>
+    <color name="colorTextPrimary">@android:color/white</color>
+    <color name="colorScreenBackground">#fff3e0</color>
+    <color name="colorTextHint">#E0E0E0</color>
 </resources>

@@ -1,9 +1,15 @@
 package io.getstream.chat.example;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.widget.TextView;
 
 import com.getstream.sdk.chat.StreamChat;
 import com.getstream.sdk.chat.component.Component;
@@ -12,7 +18,9 @@ import com.getstream.sdk.chat.enums.ReadIndicator;
 import com.getstream.sdk.chat.interfaces.TokenProvider;
 import com.getstream.sdk.chat.model.Channel;
 import com.getstream.sdk.chat.enums.Token;
+import com.getstream.sdk.chat.model.Event;
 import com.getstream.sdk.chat.model.ModelType;
+import com.getstream.sdk.chat.rest.Message;
 import com.getstream.sdk.chat.rest.User;
 import com.getstream.sdk.chat.rest.core.Client;
 import com.getstream.sdk.chat.view.fragment.ChannelFragment;
@@ -27,6 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.getstream.chat.example.tommaso.ChannelMessageListAdapter;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -34,6 +43,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import com.getstream.sdk.chat.enums.FilterObject;
+import com.getstream.sdk.chat.viewmodel.ChannelViewModel;
+import com.getstream.sdk.chat.viewmodel.ChannelViewModelFactory;
 
 import static com.getstream.sdk.chat.enums.Filters.eq;
 import static com.getstream.sdk.chat.enums.Filters.in;
@@ -45,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
     final String USER_ID = "broken-waterfall-5";
     final String USER_IMAGE = "https://bit.ly/2u9Vc0r";
     final String USER_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiYnJva2VuLXdhdGVyZmFsbC01In0.d1xKTlD_D0G-VsBoDBNbaLjO-2XWNA8rlTm4ru4sMHg";
+
+    private ChannelViewModel mChannelViewModel;
 
     boolean isSingleConversation = true;
 
@@ -61,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
         User user = new User(USER_ID, extraData);
 
-        Client client = StreamChat.getInstance();
+        Client client = StreamChat.getInstance(this.getApplication());
 
         try {
             setStreamChatUser(client, user, Token.HARDCODED);
@@ -69,10 +82,50 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        if (isSingleConversation)
-            singleConversation();
-        else
-            multiConversation(client);
+        TextView typingUserText = findViewById(R.id.typingUserView);
+        TextView watcherCountText = findViewById(R.id.watcherCount);
+
+        RecyclerView recyclerView = findViewById(R.id.recyclerview);
+        final ChannelMessageListAdapter adapter = new ChannelMessageListAdapter(this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        mChannelViewModel = ViewModelProviders.of(this,
+                new ChannelViewModelFactory(this.getApplication(), client.channel("messaging", "general"))
+        ).get(ChannelViewModel.class);
+
+        mChannelViewModel.getMessages().observe(this, new Observer<List<Message>>() {
+            @Override
+            public void onChanged(@Nullable final List<Message> messages) {
+                adapter.setMessages(messages);
+            }
+        });
+
+        mChannelViewModel.getTypingUsers().observe(this, new Observer<List<User>>() {
+            @Override
+            public void onChanged(@Nullable List<User> users) {
+                String txt = "";
+                for(User user: users) {
+                    txt = user.getId() + " " + txt;
+                }
+                typingUserText.setText("typing users: " + txt);
+            }
+        });
+
+        mChannelViewModel.getWatcherCount().observe(this, new Observer<Number>() {
+            @Override
+            public void onChanged(@Nullable Number number) {
+                watcherCountText.setText("online users: " + number.intValue());
+            }
+        });
+
+        typingUserText.setText("typing users: ");
+        watcherCountText.setText("online users: ?");
+
+        //        if (isSingleConversation)
+//            singleConversation();
+//        else
+//            multiConversation(client);
 
     }
 

@@ -1,100 +1,33 @@
 package com.getstream.sdk.chat.viewmodel;
 
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.ViewModel;
-import android.databinding.ObservableField;
-import android.text.TextUtils;
+import android.app.Application;
+import android.arch.lifecycle.AndroidViewModel;
+import android.arch.lifecycle.LiveData;
 
+import com.getstream.sdk.chat.ChannelRepository;
+import com.getstream.sdk.chat.model.Channel;
 import com.getstream.sdk.chat.rest.Message;
 import com.getstream.sdk.chat.rest.User;
-import com.getstream.sdk.chat.rest.response.ChannelState;
-import com.getstream.sdk.chat.utils.Global;
 
 import java.util.List;
 
-public class ChannelViewModel extends ViewModel {
-    // TODO: Implement the ViewModel
-    private ChannelState channelState;
+public class ChannelViewModel extends AndroidViewModel {
+    private ChannelRepository channelRepository;
 
-    public ChannelViewModel(ChannelState channelState) {
-        this.channelState = channelState;
+    public ChannelViewModel(Application application, Channel channel) {
+        super(application);
+        channelRepository = new ChannelRepository(channel);
     }
 
-    public ChannelState getChannelState() {
-        return channelState;
+    public synchronized LiveData<List<Message>> getMessages() {
+        return channelRepository.getMessages();
     }
 
-    private MutableLiveData<List<Message>> channelMessages = new MutableLiveData<>();
-
-    public MutableLiveData<List<Message>> getChannelMessages() {
-        return channelMessages;
+    public synchronized LiveData<List<User>> getTypingUsers() {
+        return channelRepository.getTypingUsers();
     }
 
-    public void setChannelMessages(List<Message> channelMessages) {
-        this.channelMessages.setValue(channelMessages);
+    public synchronized LiveData<Number> getWatcherCount() {
+        return channelRepository.getWatcherCount();
     }
-
-    public boolean isOnline() {
-        if (channelState == null) return false;
-        try {
-            if (Global.getOpponentUser(channelState) == null)
-                return false;
-
-            return Global.getOpponentUser(channelState).getOnline();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-    public String channelName() {
-        if (channelState == null) return null;
-        if (!TextUtils.isEmpty(channelState.getChannel().getName())) {
-            return channelState.getChannel().getName();
-        } else {
-            User opponent = Global.getOpponentUser(channelState);
-            if (opponent != null) {
-                return opponent.getName();
-            }
-        }
-        return null;
-    }
-    public boolean isVisibleLastActive() {
-        if (channelState == null) return false;
-        User opponent = Global.getOpponentUser(channelState);
-        if (opponent != null) {
-            if (TextUtils.isEmpty(Message.differentTime(opponent.getLast_active())))
-                return false;
-            else {
-
-                return true;
-            }
-        }
-        return false;
-    }
-    public String lastActive(){
-        if (channelState == null) return null;
-        // Last Active
-        User opponent = Global.getOpponentUser(channelState);
-        if (opponent != null) {
-            if (TextUtils.isEmpty(Message.differentTime(opponent.getLast_active())))
-                return null;
-            else {
-
-                return Message.differentTime(opponent.getLast_active());
-            }
-        }
-        return null;
-    }
-
-
-    private ObservableField<Integer> replyCount = new ObservableField<>();
-
-    public ObservableField<Integer> getReplyCount() {
-        return replyCount;
-    }
-
-    public void setReplyCount(int replyCount) {
-        this.replyCount.set(replyCount);
-    }
-// endregion
 }

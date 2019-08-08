@@ -4,9 +4,7 @@ import android.app.Activity;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.getstream.sdk.chat.component.Component;
 import com.getstream.sdk.chat.model.Member;
@@ -16,21 +14,16 @@ import com.getstream.sdk.chat.model.Attachment;
 import com.getstream.sdk.chat.rest.Message;
 import com.getstream.sdk.chat.model.SelectAttachmentModel;
 import com.getstream.sdk.chat.rest.response.ChannelState;
-import com.getstream.sdk.chat.rest.response.ChannelUserRead;
-
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
 public class Global {
-
-    private static final String TAG = Global.class.getSimpleName();
 
     public static SelectAttachmentModel selectAttachmentModel;
     public static Component component;
@@ -257,17 +250,7 @@ public class Global {
 //        }
     }
 
-    public static String getMentionedText(Message message) {
-        if (message == null) return null;
-        String text = message.getText();
-        if (message.getMentionedUsers() != null && !message.getMentionedUsers().isEmpty()) {
-            for (User mentionedUser : message.getMentionedUsers()) {
-                String userName = mentionedUser.getName();
-                text = text.replace("@" + userName, "**" + "@" + userName + "**");
-            }
-        }
-        return text;
-    }
+
 
     public static List<User> getReadUsers(ChannelState response, Message message) {
         return null;

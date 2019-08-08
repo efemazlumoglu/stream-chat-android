@@ -120,13 +120,13 @@ public class ReactionDialogAdapter extends RecyclerView.Adapter<ReactionDialogAd
             for (Reaction reaction : message.getLatestReactions()) {
                 if (reaction.getType().equals(type)) {
                     User user = reaction.getUser();
-                    try {
-                        if (user.getId().equals(StreamChat.getInstance().getUserId())) {
-                            isReactioned = true;
-                            break;
-                        }
-                    } catch (Exception e) {
-                    }
+//                    try {
+//                        if (user.getId().equals(StreamChat.getInstance().getUserId())) {
+//                            isReactioned = true;
+//                            break;
+//                        }
+//                    } catch (Exception e) {
+//                    }
 
                 }
             }
