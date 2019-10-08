@@ -78,6 +78,7 @@ public class ChatFragment extends Fragment implements View.OnTouchListener, View
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_chat, container, false);
+        mBinding.setLifecycleOwner(this);
         mView = mBinding.getRoot();
         View goToChat = mView.findViewById(R.id.rlChatsTripHolder);
         goToChat.setOnTouchListener(this);
