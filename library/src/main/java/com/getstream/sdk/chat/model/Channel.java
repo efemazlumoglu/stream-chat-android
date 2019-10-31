@@ -46,9 +46,7 @@ import com.getstream.sdk.chat.storage.converter.DateConverter;
 import com.getstream.sdk.chat.storage.converter.ExtraDataConverter;
 import com.getstream.sdk.chat.utils.Constant;
 import com.getstream.sdk.chat.utils.Utils;
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.JsonAdapter;
-import com.google.gson.annotations.SerializedName;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -80,21 +78,13 @@ public class Channel {
 
     @PrimaryKey
     @NonNull
-    @SerializedName("cid")
-    @Expose
     private String cid;
 
-    @SerializedName("id")
-    @Expose
     private String id;
 
     @NonNull
-    @SerializedName("type")
-    @Expose
     private String type;
 
-    @SerializedName("last_message_at")
-    @Expose
     @TypeConverters(DateConverter.class)
     private Date lastMessageDate;
 
@@ -134,36 +124,24 @@ public class Channel {
     @Embedded(prefix = "state_")
     private ChannelState lastState;
 
-    @SerializedName("created_at")
-    @Expose
     @TypeConverters(DateConverter.class)
     private Date createdAt;
 
-    @SerializedName("deleted_at")
-    @Expose
     @Nullable
     @TypeConverters(DateConverter.class)
     private Date deletedAt;
 
-    @SerializedName("updated_at")
-    @Expose
     @TypeConverters(DateConverter.class)
     private Date updatedAt;
 
-    @SerializedName("created_by")
-    @Expose
     @Ignore
     private User createdByUser;
 
     @ColumnInfo(name = "created_by_user_id")
     private String createdByUserID;
 
-    @SerializedName("frozen")
-    @Expose
     private boolean frozen;
 
-    @SerializedName("config")
-    @Expose
     @Embedded(prefix = "config_")
     private Config config;
 
