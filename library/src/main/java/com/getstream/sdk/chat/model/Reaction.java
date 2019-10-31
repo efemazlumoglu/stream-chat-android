@@ -7,8 +7,6 @@ import com.getstream.sdk.chat.rest.User;
 import com.getstream.sdk.chat.storage.Sync;
 import com.getstream.sdk.chat.storage.converter.DateConverter;
 import com.getstream.sdk.chat.storage.converter.ExtraDataConverter;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 import java.util.Map;
@@ -18,15 +16,11 @@ public class Reaction {
     @ColumnInfo(name = "message_id")
     private String messageId;
 
-    @SerializedName("user")
-    @Expose
     private User user;
 
     @ColumnInfo(name = "user_id")
     private String userID;
 
-    @SerializedName("type")
-    @Expose
     private String type;
 
     @ColumnInfo(name = "created_at")
