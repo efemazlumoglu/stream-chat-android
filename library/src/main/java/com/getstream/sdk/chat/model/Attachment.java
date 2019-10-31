@@ -5,9 +5,7 @@ import androidx.room.TypeConverters;
 import com.getstream.sdk.chat.R;
 import com.getstream.sdk.chat.rest.adapter.AttachmentGsonAdapter;
 import com.getstream.sdk.chat.storage.converter.ExtraDataConverter;
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.JsonAdapter;
-import com.google.gson.annotations.SerializedName;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -18,50 +16,20 @@ import java.util.HashMap;
 @JsonAdapter(AttachmentGsonAdapter.class)
 public class Attachment {
     public Config config = new Config(); // Local file Attach Config
-    @SerializedName("title")
-    @Expose
     private String title;
-    @SerializedName("author_name")
-    @Expose
     private String author;
-    @SerializedName("text")
-    @Expose
     private String text;
-    @SerializedName("type")
-    @Expose
     private String type;
-    @SerializedName("image")
-    @Expose
     private String image;
-    @SerializedName("url")
-    @Expose
     private String url;
-    @SerializedName("name")
-    @Expose
     private String name;
-    @SerializedName("title_link")
-    @Expose
     private String titleLink;
-    @SerializedName("thumb_url")
-    @Expose
     private String thumbURL;
-    @SerializedName("fallback")
-    @Expose
     private String fallback;
-    @SerializedName("image_url")
-    @Expose
     private String imageURL;
-    @SerializedName("asset_url")
-    @Expose
     private String assetURL;
-    @SerializedName("og_scrape_url")
-    @Expose
     private String ogURL;
-    @SerializedName("mime_type")
-    @Expose
     private String mime_type;
-    @SerializedName("file_size")
-    @Expose
     private int file_size;
 
     // Additional Params
