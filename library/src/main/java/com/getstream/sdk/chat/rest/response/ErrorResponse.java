@@ -1,8 +1,6 @@
 package com.getstream.sdk.chat.rest.response;
 
 import com.getstream.sdk.chat.rest.codecs.GsonConverter;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 import java.io.IOException;
 
@@ -12,20 +10,12 @@ public class ErrorResponse extends IOException {
 
     public static final int TOKEN_EXPIRED_CODE = 40;
 
-    @SerializedName("code")
-    @Expose
     private int code;
 
-    @SerializedName("message")
-    @Expose
     private String message;
 
-    @SerializedName("StatusCode")
-    @Expose
     private int StatusCode;
 
-    @SerializedName("duration")
-    @Expose
     private String duration;
 
     public ErrorResponse(String message, int code, String message1, int statusCode, String duration) {
