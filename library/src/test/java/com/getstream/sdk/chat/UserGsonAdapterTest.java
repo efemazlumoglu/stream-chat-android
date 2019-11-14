@@ -31,7 +31,7 @@ public class UserGsonAdapterTest {
         Member member = GsonConverter.Gson().fromJson(data, Member.class);
         assertEquals("raspy-feather-1", member.getUser().getId());
         assertEquals("user", member.getUser().getRole());
-        assertEquals("https://getstream.io/random_svg/?id=raspy-feather-1\u0026name=Raspy+feather", member.getUser().getExtraData().get("image"));
+        assertEquals("https://getstream.io/random_svg/?id=raspy-feather-1\u0026name=Raspy+feather", member.getUser().getImage());
     }
 
     @org.junit.jupiter.api.Test
@@ -92,9 +92,9 @@ public class UserGsonAdapterTest {
         Event event = GsonConverter.Gson().fromJson(data, Event.class);
         assertEquals("broken-waterfall-5", event.getUser().getId());
         assertEquals("user", event.getUser().getRole());
-        assertEquals("https://getstream.io/random_svg/?id=broken-waterfall-5\\u0026amp;name=Broken+waterfall", event.getMessage().getUser().getExtraData().get("image"));
-        assertEquals("Broken waterfall", event.getUser().getExtraData().get("name"));
-        assertEquals("https://getstream.io/random_svg/?id=broken-waterfall-5\\u0026amp;name=Broken+waterfall", event.getUser().getExtraData().get("image"));
+        assertEquals("https://getstream.io/random_svg/?id=broken-waterfall-5\u0026amp;name=Broken+waterfall", event.getMessage().getUser().getImage());
+        assertEquals("Broken waterfall", event.getUser().getName());
+        assertEquals("https://getstream.io/random_svg/?id=broken-waterfall-5\u0026amp;name=Broken+waterfall", event.getUser().getImage());
     }
 
     @org.junit.jupiter.api.Test
