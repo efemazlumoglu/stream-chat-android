@@ -74,6 +74,20 @@
                         android:layout_height="wrap_content"/>
 
                     <EditText
+                        android:id="@+id/edit_api_protocol"
+                        android:hint="api protocol"
+                        android:text="@={appConfig.apiProtocol}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                    <EditText
+                        android:id="@+id/edit_socket_protocol"
+                        android:hint="socket protocol"
+                        android:text="@={appConfig.socketProtocol}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                    <EditText
                         android:id="@+id/edit_api_endpoint"
                         android:hint="api endpoint"
                         android:text="@={appConfig.apiEndPoint}"

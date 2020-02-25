@@ -23,6 +23,8 @@ public class AppConfig {
     private final String API_ENDPOINT = "apiEndPoint";
     private final String API_TIMEOUT = "apiTimeout";
     private final String CDN_TIMEOUT = "cdnTimeout";
+    private final String API_PROTOCOL = "api-protocol";
+    private final String SOCKET_PROTOCOL = "socket-protocol";
 
     public AppConfig(Context context) {
         preferences = context.getSharedPreferences(APP_PREFERENCE, Activity.MODE_PRIVATE);
@@ -73,16 +75,27 @@ public class AppConfig {
         return result;
     }
 
-    public int getCdnTimeout() {
-        int result = preferences.getInt(CDN_TIMEOUT, appConfig.cdnTimeout);
+    public String getApiProtocol() {
+        String result = preferences.getString(API_PROTOCOL, appConfig.apiProtocol);
         return result;
     }
 
-    public void reset() {
-        preferences.edit().remove(API_KEY).apply();
-        preferences.edit().remove(API_ENDPOINT).apply();
-        preferences.edit().remove(API_TIMEOUT).apply();
-        preferences.edit().remove(CDN_TIMEOUT).apply();
+    public void setApiProtocol(String value) {
+        preferences.edit().putString(API_PROTOCOL, value).apply();
+    }
+
+    public String getSocketProtocol() {
+        String result = preferences.getString(SOCKET_PROTOCOL, appConfig.socketProtocol);
+        return result;
+    }
+
+    public void setSocketProtocol(String value) {
+        preferences.edit().putString(SOCKET_PROTOCOL, value).apply();
+    }
+
+    public int getCdnTimeout() {
+        int result = preferences.getInt(CDN_TIMEOUT, appConfig.cdnTimeout);
+        return result;
     }
 
     public void setApiKey(String value) {
@@ -101,6 +114,13 @@ public class AppConfig {
         preferences.edit().putInt(CDN_TIMEOUT, value).apply();
     }
 
+    public void reset() {
+        preferences.edit().remove(API_KEY).apply();
+        preferences.edit().remove(API_ENDPOINT).apply();
+        preferences.edit().remove(API_TIMEOUT).apply();
+        preferences.edit().remove(CDN_TIMEOUT).apply();
+    }
+
     static class Config {
         @SerializedName("api_key")
         String apiKey;
@@ -110,6 +130,12 @@ public class AppConfig {
 
         @SerializedName("api_timeout")
         int apiTimeout;
+
+        @SerializedName("api_protocol")
+        String apiProtocol;
+
+        @SerializedName("socket_protocol")
+        String socketProtocol;
 
         @SerializedName("cdn_timeout")
         int cdnTimeout;

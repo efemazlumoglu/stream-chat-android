@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-
 import com.crashlytics.android.Crashlytics;
 import com.getstream.sdk.chat.StreamChat;
 import com.getstream.sdk.chat.logger.StreamChatLogger;
@@ -32,6 +30,7 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.Map;
 
+import androidx.annotation.NonNull;
 import io.fabric.sdk.android.Fabric;
 import io.getstream.chat.example.utils.AppConfig;
 
@@ -113,6 +112,8 @@ public class BaseApplication extends Application {
                 .BaseURL(appConfig.getApiEndPoint())
                 .Timeout(appConfig.getApiTimeout())
                 .CDNTimeout(appConfig.getCdnTimeout())
+                .apiProtocol(appConfig.getApiProtocol())
+                .socketProtocol(appConfig.getSocketProtocol())
                 .build();
     }
 

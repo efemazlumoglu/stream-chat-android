@@ -11,6 +11,9 @@ public class ApiClientOptions {
     private String cdnURL;
     private int cdntimeout;
 
+    private String apiProtocol = "https";
+    private String socketProtocol = "wss";
+
     public ApiClientOptions(String baseURL, int timeout, int cdntimeout, int keepAliveDuration) {
         this.baseURL = baseURL;
         this.timeout = timeout;
@@ -29,15 +32,15 @@ public class ApiClientOptions {
     }
 
     public String getHttpURL() {
-        return "https://" + baseURL + "/";
+        return apiProtocol + "://" + baseURL + "/";
     }
 
     public String getCdnHttpURL() {
-        return "https://" + cdnURL + "/";
+        return apiProtocol + "://" + cdnURL + "/";
     }
 
     public String getWssURL() {
-        return "wss://" + baseURL + "/";
+        return socketProtocol + "://" + baseURL + "/";
     }
 
     public int getTimeout() {
@@ -66,6 +69,16 @@ public class ApiClientOptions {
 
         public Builder CDNTimeout(int timeout) {
             options.cdntimeout = timeout;
+            return this;
+        }
+
+        public Builder apiProtocol(String value) {
+            options.apiProtocol = value;
+            return this;
+        }
+
+        public Builder socketProtocol(String value) {
+            options.socketProtocol = value;
             return this;
         }
 
