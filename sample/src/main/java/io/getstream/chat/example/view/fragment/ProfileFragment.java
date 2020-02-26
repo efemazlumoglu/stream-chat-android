@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.getstream.sdk.chat.StreamChat;
 import com.getstream.sdk.chat.rest.core.Client;
@@ -119,9 +120,8 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onError(String errMsg, int errCode) {
-                ProfileFragment.this.onError(
-                        getString(R.string.error_removing_device, errMsg, errCode)
-                );
+                Toast.makeText(getContext(), R.string.error_removing_device, Toast.LENGTH_LONG).show();
+                ProfileFragment.this.onSuccess();
             }
         });
     }
