@@ -11,16 +11,16 @@
         tools:layout_height="56dp"
         >
 
-        <Button
+        <ImageButton
             android:id="@+id/btn_back"
             android:layout_width="@dimen/stream_channel_header_back_width"
             android:layout_height="@dimen/stream_channel_header_back_height"
             android:layout_marginStart="@dimen/stream_channel_header_back_margin_start"
+            android:background="?selectableItemBackgroundBorderless"
             android:gravity="center"
             app:layout_constraintBottom_toTopOf="@+id/iv_separator"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_channel_name"

@@ -70,7 +70,7 @@ class ChannelHeaderView @JvmOverloads constructor(
 		style.lastActiveText.apply(binding.tvActive)
 		binding.tvActive.visibility = if (style.isLastActiveShow) View.VISIBLE else View.GONE
 		binding.btnBack.visibility = if (style.isBackButtonShow) View.VISIBLE else View.GONE
-		binding.btnBack.background = style.backButtonBackground
+		binding.btnBack.setImageDrawable(style.backButtonBackground)
 		binding.avatarGroup.visibility = if (style.isAvatarGroupShow) View.VISIBLE else View.GONE
 		binding.btnOption.visibility = if (style.isOptionsButtonShow) View.VISIBLE else View.GONE
 		binding.btnOption.background = style.optionsButtonBackground
