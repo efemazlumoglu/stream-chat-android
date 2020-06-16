@@ -1,5 +1,9 @@
 ## Upcoming
 
+## May 15th, 2020 - 4.2.11-beta-5
+
+- Update livedata dependency to version which fixes NotificationMarkReadEvent crash
+
 ## May 15th, 2020 - 4.2.6
 
 - Fix Avatar crash if channel/user initials are empty
