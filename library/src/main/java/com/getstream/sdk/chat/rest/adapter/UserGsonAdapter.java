@@ -1,5 +1,7 @@
 package com.getstream.sdk.chat.rest.adapter;
 
+import android.util.Log;
+
 import com.getstream.sdk.chat.model.Device;
 import com.getstream.sdk.chat.model.Mute;
 import com.getstream.sdk.chat.rest.User;
@@ -18,7 +20,7 @@ import java.util.Map;
 
 public class UserGsonAdapter extends TypeAdapter<User> {
     @Override
-    public void write(JsonWriter writer, User user) throws IOException {
+    public synchronized void write(JsonWriter writer, User user) throws IOException {
 
         HashMap<String, Object> data = new HashMap<>();
 
@@ -32,19 +34,22 @@ public class UserGsonAdapter extends TypeAdapter<User> {
         if (user.getName() != null)
             data.put("name", user.getName());
 
-        if (user.getImage() != null)
-            data.put("image", user.getImage());
+        String image = user.getImage();
+        if (image != null)
+            data.put("image", image);
+
+        Log.d("image-debug", "gson write user(" + user.getId() + "). image == " + image);
 
         TypeAdapter adapter = GsonConverter.Gson().getAdapter(HashMap.class);
         adapter.write(writer, data);
     }
 
     @Override
-    public User read(JsonReader reader) throws IOException {
+    public synchronized User read(JsonReader reader) throws IOException {
         Gson gson = GsonConverter.Gson();
 
         TypeAdapter adapter = gson.getAdapter(HashMap.class);
-        HashMap<String, Object> value =  (HashMap) adapter.read(reader);
+        HashMap<String, Object> value = (HashMap) adapter.read(reader);
 
         if (value == null) {
             return null;
@@ -53,7 +58,7 @@ public class UserGsonAdapter extends TypeAdapter<User> {
         User user = new User();
         HashMap<String, Object> extraData = new HashMap<>();
 
-        for (HashMap.Entry<String, Object> set : value.entrySet()) {            
+        for (HashMap.Entry<String, Object> set : value.entrySet()) {
             String json = gson.toJson(set.getValue());
             // Set Reserved Data
             switch (set.getKey()) {
@@ -94,10 +99,12 @@ public class UserGsonAdapter extends TypeAdapter<User> {
                     user.setInvisible(gson.fromJson(json, Boolean.class));
                     continue;
                 case "devices":
-                    user.setDevices(gson.fromJson(json, new TypeToken<ArrayList<Device>>(){}.getType()));
+                    user.setDevices(gson.fromJson(json, new TypeToken<ArrayList<Device>>() {
+                    }.getType()));
                     continue;
                 case "mutes":
-                    user.setMutes(gson.fromJson(json, new TypeToken<ArrayList<Mute>>(){}.getType()));
+                    user.setMutes(gson.fromJson(json, new TypeToken<ArrayList<Mute>>() {
+                    }.getType()));
                     continue;
                 case "unread_count":
                     gson.fromJson(json, Integer.class);
@@ -108,7 +115,10 @@ public class UserGsonAdapter extends TypeAdapter<User> {
         }
 
         if (user.getName() == null) user.setName("");
-        if (user.getImage() == null) user.setImage("");
+        if (user.getImage() == null) {
+            Log.d("image-debug", "gson read user(" + user.getId() + "). image == null. replaced with 'temp-replacement'");
+            user.setImage("temp-replacement");
+        }
         user.setExtraData(extraData);
         return user;
     }

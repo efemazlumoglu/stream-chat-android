@@ -462,6 +462,8 @@ public class Client implements WSResponseHandler {
     public synchronized void setUser(@NotNull User user, @NotNull final TokenProvider provider) {
         anonymousConnection = false;
 
+        Log.d("image-debug", "setUser with image=" + user.getImage());
+
         if (getUser() != null) {
             StreamChat.getLogger().logW(this, "setUser was called but a user is already set; this is probably an integration mistake");
             return;
