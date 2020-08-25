@@ -969,9 +969,16 @@ public class Channel {
 
     @Override
     public String toString() {
+        String extraDataJson = "{";
+        for (Map.Entry<String, Object> entry : extraData.entrySet()) {
+            extraDataJson += entry.getKey() + "='" + entry.getKey() + "', ";
+        }
+        extraDataJson += "} ";
         return "Channel{" +
-                "id='" + id + '\'' + "," +
-                "name='" + getName() + '\'' +
+                "id='" + id + "', " +
+                "name='" + getName() + "', " +
+                "image='" + getImage() + "', " +
+                "extraData=" + extraDataJson +
                 '}';
     }
 }

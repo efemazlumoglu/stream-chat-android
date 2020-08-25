@@ -3,6 +3,7 @@ package com.getstream.sdk.chat.view;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.widget.RelativeLayout;
 
@@ -163,5 +164,16 @@ public class AvatarGroupView<STYLE extends BaseStyle> extends RelativeLayout {
 
         FontsManager fontsManager = StreamChat.getFontsManager();
         fontsManager.setFont(style.avatarInitialText, imageView, factor);
+
+        String listOfUsers = "";
+        if (lastActiveUsers != null) {
+            for (User user : lastActiveUsers) {
+                listOfUsers += "" + user + "\n";
+            }
+        }
+
+        Log.d("JcRoomiLogV3",
+                "Channel -> " + channel + "\nUser -> " + user + "\n ListOfUsers -> " + listOfUsers + "\nImageUrl -> " + image + "\nInitials -> " + initial
+        );
     }
 }

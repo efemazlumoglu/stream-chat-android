@@ -319,9 +319,16 @@ public class User implements UserEntity {
 
     @Override
     public String toString() {
+        String extraDataJson = "{";
+        for (Map.Entry<String, Object> entry : extraData.entrySet()) {
+            extraDataJson += entry.getKey() + "='" + entry.getKey() + "', ";
+        }
+        extraDataJson += "} ";
         return "User{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
+                "id='" + id + "', " +
+                "name='" + name + "', " +
+                "image='" + getImage() + "', " +
+                "extraData=" + extraDataJson +
                 '}';
     }
 }
